@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Healthcare Candidate Application | MARS Solutions Group</title>
+<meta name="description" content="Submit your details securely to the MARS Solutions Group healthcare recruitment team.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   MARS Solutions Group | Healthcare candidate application
+   Brand tokens live in :root. Change a value here and it updates everywhere.
+   Typeface: set --font below to the exact MARS website font if it differs.
+   ========================================================================== */
+:root {
+  --navy: #25245E;
+  --navy-deep: #1B1940;
+  --crimson: #C9252D;
+  --crimson-dark: #A81E25;
+  --blush: #FBE9EA;
+  --lilac: #EEEDF8;
+  --bg: #F6F5FA;
+  --ink: #1B1940;
+  --muted: #5E5D7A;
+  --line: #DCDAEA;
+  --field-line: #8F8EAF;
+  --ok: #1E7B4F;
+  --err: #B01E25;
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 16px; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+[hidden] { display: none !important; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.skip {
+  position: absolute; left: 12px; top: -60px; z-index: 50;
+  background: var(--navy); color: #fff; padding: 10px 16px; border-radius: 8px;
+  text-decoration: none; font-weight: 600;
+}
+.skip:focus { top: 12px; }
+
+/* ---------- Header ---------- */
+.site-header { background: #fff; border-bottom: 1px solid var(--line); }
+.site-header-in {
+  max-width: 1120px; margin: 0 auto; padding: 14px 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.brand { display: inline-flex; align-items: center; text-decoration: none; color: var(--navy); }
+.brand img { display: block; height: 40px; width: auto; }
+.brand-text { font-weight: 700; font-size: 19px; letter-spacing: -0.01em; }
+.header-note { font-size: 14px; color: var(--muted); text-align: right; }
+.header-note a { color: var(--navy); font-weight: 600; }
+
+/* ---------- Hero ---------- */
+.hero { background: var(--navy); color: #fff; }
+.hero-in { max-width: 1120px; margin: 0 auto; padding: 44px 24px 92px; }
+.hero h1 {
+  margin: 0 0 12px; font-size: clamp(28px, 4.2vw, 42px); line-height: 1.12;
+  font-weight: 700; letter-spacing: -0.02em; max-width: 20ch;
+}
+.hero p { margin: 0; max-width: 62ch; color: #D8D7EC; font-size: 17px; }
+.trust { list-style: none; margin: 24px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 28px; }
+.trust li { display: inline-flex; align-items: center; gap: 8px; font-size: 14.5px; color: #fff; }
+.trust svg { flex: none; }
+
+/* ---------- Layout ---------- */
+.shell {
+  max-width: 1120px; margin: -56px auto 64px; padding: 0 24px;
+  display: grid; grid-template-columns: 252px minmax(0, 1fr); gap: 28px; align-items: start;
+}
+.rail {
+  position: sticky; top: 20px; background: #fff; border: 1px solid var(--line);
+  border-radius: 12px; padding: 22px 20px;
+}
+.rail h2 { margin: 0 0 16px; font-size: 14px; font-weight: 600; color: var(--muted); }
+.rail ol { list-style: none; margin: 0; padding: 0; }
+.rail li { position: relative; }
+.rail li + li { margin-top: 4px; }
+.rail li:not(:last-child)::before {
+  content: ""; position: absolute; left: 15px; top: 36px; bottom: -8px; width: 2px; background: var(--line);
+}
+.rail li.done:not(:last-child)::before { background: var(--navy); }
+.rail-btn {
+  position: relative; display: flex; align-items: center; gap: 12px; width: 100%;
+  padding: 4px 0; background: none; border: 0; font: inherit; font-size: 15px;
+  color: var(--muted); text-align: left; cursor: pointer; border-radius: 8px;
+}
+.rail-dot {
+  flex: none; width: 32px; height: 32px; border-radius: 50%;
+  display: grid; place-items: center; font-size: 14px; font-weight: 600;
+  background: #fff; border: 2px solid var(--line); color: var(--muted);
+}
+.rail li.done .rail-dot { background: var(--navy); border-color: var(--navy); color: #fff; }
+.rail li.current .rail-dot { border-color: var(--crimson); color: var(--crimson); }
+.rail li.current .rail-btn { color: var(--ink); font-weight: 600; }
+.rail li.done .rail-btn { color: var(--ink); }
+.mprog { display: none; }
+
+.card {
+  background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  padding: 40px 44px 36px; box-shadow: 0 1px 2px rgba(37, 36, 94, 0.06);
+  scroll-margin-top: 16px;
+}
+
+/* ---------- Step content ---------- */
+.step h2 {
+  margin: 0 0 6px; font-size: 26px; line-height: 1.2; font-weight: 700;
+  letter-spacing: -0.015em; color: var(--navy);
+}
+.step h2:focus { outline: none; }
+.step-lead { margin: 0 0 28px; color: var(--muted); max-width: 68ch; }
+.step h3 { margin: 32px 0 4px; font-size: 18px; font-weight: 600; color: var(--navy); }
+.step h3 + .step-lead, .step h3 + .hint { margin-top: 0; }
+.group { margin-top: 32px; padding-top: 28px; border-top: 1px solid var(--line); }
+.group:first-of-type { margin-top: 0; padding-top: 0; border-top: 0; }
+.group > h3 { margin: 0 0 16px; }
+
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 20px; }
+.span-2 { grid-column: 1 / -1; }
+.addr-row {
+  grid-column: 1 / -1; display: grid; gap: 22px 20px;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr) minmax(0, 1fr);
+}
+.stack { display: grid; gap: 22px; }
+
+.field { margin: 0; padding: 0; border: 0; min-width: 0; }
+.field > label, .field > legend, .label {
+  display: block; padding: 0; margin: 0 0 6px; font-size: 15px; font-weight: 600; color: var(--ink);
+}
+.req { color: var(--crimson); font-weight: 600; }
+.hint { margin: -2px 0 8px; font-size: 14px; color: var(--muted); }
+
+input[type="text"], input[type="email"], input[type="tel"], input[type="date"],
+input[type="number"], input[type="password"], select, textarea {
+  width: 100%; min-height: 48px; padding: 11px 14px; font: inherit; font-size: 16px;
+  color: var(--ink); background: #fff; border: 1.5px solid var(--field-line);
+  border-radius: 8px; appearance: none; -webkit-appearance: none;
+}
+textarea { min-height: 104px; resize: vertical; }
+select {
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1.5l6 6 6-6' fill='none' stroke='%2325245E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none; border-color: var(--navy); box-shadow: 0 0 0 4px rgba(37, 36, 94, 0.18);
+}
+input[readonly] { background: var(--bg); color: var(--muted); }
+input::placeholder, textarea::placeholder { color: #8A89A6; }
+.field.invalid input, .field.invalid select, .field.invalid textarea { border-color: var(--err); }
+.err { margin: 6px 0 0; font-size: 14px; color: var(--err); font-weight: 500; }
+
+.with-toggle { position: relative; }
+.with-toggle input { padding-right: 76px; }
+.toggle-btn {
+  position: absolute; right: 6px; top: 6px; height: 36px; padding: 0 12px;
+  background: none; border: 0; border-radius: 6px; font: inherit; font-size: 14px;
+  font-weight: 600; color: var(--navy); cursor: pointer;
+}
+
+/* Choice pills (radio and checkbox) */
+.choices { display: flex; flex-wrap: wrap; gap: 10px; }
+.choice { position: relative; display: inline-block; }
+.choice input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.choice span {
+  display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 10px 18px;
+  background: #fff; border: 1.5px solid var(--field-line); border-radius: 8px; font-weight: 500;
+}
+.choice input:checked + span { background: var(--navy); border-color: var(--navy); color: #fff; }
+.choice input:focus-visible + span { box-shadow: 0 0 0 4px rgba(37, 36, 94, 0.28); }
+.field.invalid .choice span { border-color: var(--err); }
+.choices.vertical { flex-direction: column; align-items: stretch; }
+
+.consent { display: flex; align-items: flex-start; gap: 12px; }
+.consent input {
+  flex: none; width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--navy);
+}
+.consent label { font-weight: 400; font-size: 15px; margin: 0; }
+.consent .req { margin-left: 2px; }
+
+/* Notes */
+.note {
+  margin: 0 0 24px; padding: 16px 18px; background: var(--lilac);
+  border-left: 4px solid var(--navy); border-radius: 0 8px 8px 0; font-size: 15px;
+}
+.note.alert { background: var(--blush); border-left-color: var(--crimson); }
+.note p { margin: 0; }
+.note p + p, .note ul + p, .note p + ul { margin-top: 8px; }
+.note ul, .note ol { margin: 6px 0 0; padding-left: 20px; }
+.note strong { color: var(--navy); }
+.note summary { cursor: pointer; font-weight: 600; color: var(--navy); }
+.note summary:focus-visible { outline: 3px solid rgba(37, 36, 94, 0.4); outline-offset: 3px; border-radius: 4px; }
+
+.cond { margin-top: 18px; }
+.cond .field { margin: 0; }
+
+/* Reference cards */
+.refcard { padding: 22px; border: 1.5px solid var(--line); border-radius: 10px; background: #FCFCFE; }
+.refcard + .refcard { margin-top: 20px; }
+.refcard h3 { margin: 0 0 16px; }
+
+/* Uploads */
+.drop {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 16px 18px;
+  border: 1.5px dashed var(--field-line); border-radius: 10px; background: #FAFAFD;
+}
+.drop.over { border-color: var(--navy); background: var(--lilac); }
+.drop input[type="file"] { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+.drop-btn {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 8px;
+  background: #fff; border: 1.5px solid var(--navy); color: var(--navy); font-weight: 600; cursor: pointer;
+}
+.drop input:focus-visible + .drop-btn { box-shadow: 0 0 0 4px rgba(37, 36, 94, 0.28); }
+.drop-hint { font-size: 14px; color: var(--muted); }
+.filelist { list-style: none; margin: 10px 0 0; padding: 0; }
+.filelist li {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 14px; background: var(--lilac); border-radius: 8px; font-size: 15px;
+}
+.filelist li + li { margin-top: 8px; }
+.file-name { overflow-wrap: anywhere; font-weight: 500; }
+.file-size { color: var(--muted); font-size: 13.5px; margin-left: 8px; white-space: nowrap; }
+.file-remove {
+  flex: none; background: none; border: 0; padding: 6px 8px; font: inherit; font-size: 14px;
+  font-weight: 600; color: var(--err); cursor: pointer; border-radius: 6px;
+}
+
+/* Review */
+.review { margin: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.review-section { padding: 16px 18px; }
+.review-section + .review-section { border-top: 1px solid var(--line); }
+.review-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.review-head h3 { margin: 0; font-size: 16px; }
+.link-btn {
+  background: none; border: 0; padding: 4px 6px; font: inherit; font-size: 14px;
+  font-weight: 600; color: var(--crimson); cursor: pointer; border-radius: 6px;
+}
+.review dl { margin: 0; display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 6px 16px; font-size: 15px; }
+.review dt { color: var(--muted); }
+.review dd { margin: 0; overflow-wrap: anywhere; }
+
+/* Buttons and actions */
+.actions {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--line);
+}
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 50px; padding: 0 26px; border-radius: 8px; font: inherit; font-weight: 600;
+  font-size: 16px; text-decoration: none; cursor: pointer; border: 1.5px solid transparent;
+}
+.btn-primary { background: var(--crimson); color: #fff; }
+.btn-primary:hover { background: var(--crimson-dark); }
+.btn-ghost { background: #fff; color: var(--navy); border-color: var(--navy); }
+.btn-ghost:hover { background: var(--lilac); }
+.btn:focus-visible, .rail-btn:focus-visible, .link-btn:focus-visible,
+.toggle-btn:focus-visible, .file-remove:focus-visible {
+  outline: 3px solid rgba(37, 36, 94, 0.5); outline-offset: 2px;
+}
+.btn[disabled] { opacity: 0.65; cursor: progress; }
+.spinner {
+  width: 18px; height: 18px; border-radius: 50%; border: 2.5px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff; animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.step-alert { margin: 0 0 24px; }
+.fineprint { margin: 18px 0 0; font-size: 13.5px; color: var(--muted); }
+.fineprint a { color: var(--navy); font-weight: 600; }
+.hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.checklist-link { margin-top: 14px; }
+
+/* Success */
+.success { text-align: center; padding: 28px 8px 12px; max-width: 560px; margin: 0 auto; }
+.success-icon {
+  width: 64px; height: 64px; margin: 0 auto 20px; border-radius: 50%;
+  background: var(--navy); display: grid; place-items: center;
+}
+.success h2 { margin: 0 0 10px; font-size: 28px; color: var(--navy); letter-spacing: -0.015em; }
+.success h2:focus { outline: none; }
+.success p { margin: 0 0 12px; color: var(--muted); }
+.success .ref { display: inline-block; margin-top: 8px; padding: 8px 14px; background: var(--lilac); border-radius: 8px; color: var(--navy); font-weight: 600; }
+
+/* Footer */
+.site-footer { border-top: 1px solid var(--line); background: #fff; }
+.site-footer-in {
+  max-width: 1120px; margin: 0 auto; padding: 20px 24px; display: flex; flex-wrap: wrap;
+  gap: 8px 24px; justify-content: space-between; font-size: 14px; color: var(--muted);
+}
+.site-footer a { color: var(--navy); font-weight: 500; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .shell { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: -48px; padding: 0 16px; }
+  .rail { position: static; padding: 14px 16px; }
+  .rail h2, .rail ol { display: none; }
+  .mprog { display: block; }
+  .mprog-label { display: flex; justify-content: space-between; gap: 12px; font-size: 14.5px; font-weight: 600; margin-bottom: 10px; }
+  .mprog-label span:last-child { color: var(--muted); font-weight: 500; }
+  .mprog-bar { height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+  .mprog-fill { display: block; height: 100%; width: 0; background: var(--crimson); border-radius: 99px; transition: width 0.25s ease; }
+  .card { padding: 28px 22px 26px; }
+  .hero-in { padding: 32px 16px 84px; }
+  .site-header-in { padding: 12px 16px; }
+}
+@media (max-width: 640px) {
+  .grid, .addr-row { grid-template-columns: minmax(0, 1fr); }
+  .review dl { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .review dd { margin-bottom: 8px; }
+  .header-note { display: none; }
+  .actions { flex-direction: column-reverse; align-items: stretch; }
+  .actions .btn { width: 100%; }
+  .refcard { padding: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#form-top">Skip to the application form</a>
+
+<header class="site-header">
+  <div class="site-header-in">
+    <a class="brand" href="https://www.marssg.com/" aria-label="MARS Solutions Group home">
+      <img id="logo" src="https://mars-solutions.s3.us-east-2.amazonaws.com/MARS-logo-color.png" alt="MARS Solutions Group" height="40">
+    </a>
+    <div class="header-note">Questions? <a href="https://www.marssg.com/contact-us">Contact our team</a></div>
+  </div>
+</header>
+
+<section class="hero" aria-labelledby="page-title">
+  <div class="hero-in">
+    <h1 id="page-title">Healthcare candidate application</h1>
+    <p>Share your details, credentials and references in one place so our recruitment team can match you with the right placement.</p>
+    <ul class="trust">
+      <li>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        About 10 minutes
+      </li>
+      <li>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        Sent over an encrypted connection
+      </li>
+      <li>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg>
+        Works on your phone
+      </li>
+    </ul>
+  </div>
+</section>
+
+<main class="shell" id="main">
+  <nav class="rail" aria-label="Application progress">
+    <h2>Your application</h2>
+    <ol id="rail"></ol>
+    <div class="mprog" aria-hidden="true">
+      <div class="mprog-label"><span id="mprog-title"></span><span id="mprog-count"></span></div>
+      <div class="mprog-bar"><span class="mprog-fill" id="mprog-fill"></span></div>
+    </div>
+  </nav>
+
+  <div class="card" id="form-top">
+    <noscript>
+      <div class="note alert"><p><strong>JavaScript is required.</strong> Please turn on JavaScript in your browser to complete this application.</p></div>
+    </noscript>
+
+    <form id="app" novalidate autocomplete="on" method="post" enctype="multipart/form-data">
+      <!-- Honeypot: real people never see or fill this -->
+      <div class="hp" aria-hidden="true">
+        <label>Leave this field empty <input type="text" name="company_website" tabindex="-1" autocomplete="off"></label>
+      </div>
+      <input type="hidden" name="client" id="client-field" value="">
+      <input type="hidden" name="form_version" value="1.0">
+
+      <!-- ================= STEP 1: DETAILS ================= -->
+      <section class="step" data-title="Your details" aria-labelledby="h-1">
+        <h2 id="h-1" tabindex="-1">Your details</h2>
+        <p class="step-lead">Use your legal name and permanent address, exactly as they appear on your license or government ID.</p>
+
+        <div class="note">
+          <details>
+            <summary>What to have ready</summary>
+            <ul>
+              <li>Your professional license and any certificates (PDF or a clear photo)</li>
+              <li>Your current life-support card, such as BLS or ACLS</li>
+              <li>Two professional references from the last 2 to 5 years</li>
+              <li>The skills checklist for your specialty (we link to it in step 4)</li>
+            </ul>
+          </details>
+        </div>
+
+        <div class="grid">
+          <div class="field span-2" data-required="1">
+            <label for="full_name">Full legal name</label>
+            <input type="text" id="full_name" name="full_name" autocomplete="name" maxlength="120">
+          </div>
+
+          <div class="field span-2" data-required="1">
+            <label for="address_line1">Permanent home address</label>
+            <input type="text" id="address_line1" name="address_line1" autocomplete="address-line1" maxlength="150" placeholder="Street address">
+          </div>
+          <div class="field span-2">
+            <label for="address_line2">Apartment, suite or unit <span class="hint" style="display:inline;margin:0">(optional)</span></label>
+            <input type="text" id="address_line2" name="address_line2" autocomplete="address-line2" maxlength="80">
+          </div>
+          <div class="addr-row">
+            <div class="field" data-required="1">
+              <label for="city">City</label>
+              <input type="text" id="city" name="city" autocomplete="address-level2" maxlength="80">
+            </div>
+            <div class="field" data-required="1">
+              <label for="state">State</label>
+              <select id="state" name="state" autocomplete="address-level1"><option value="">Select state</option></select>
+            </div>
+            <div class="field" data-required="1">
+              <label for="zip">ZIP code</label>
+              <input type="text" id="zip" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="10" data-type="zip">
+            </div>
+          </div>
+
+          <div class="field" data-required="1">
+            <label for="phone">Phone number</label>
+            <input type="tel" id="phone" name="phone" inputmode="tel" autocomplete="tel" placeholder="(555) 123-4567" data-type="phone">
+          </div>
+          <div class="field">
+            <label for="phone_alt">Alternate phone <span class="hint" style="display:inline;margin:0">(optional)</span></label>
+            <input type="tel" id="phone_alt" name="phone_alt" inputmode="tel" autocomplete="off" placeholder="(555) 123-4567" data-type="phone">
+          </div>
+          <div class="field" data-required="1">
+            <label for="email">Email address</label>
+            <input type="email" id="email" name="email" autocomplete="email" maxlength="160" data-type="email">
+          </div>
+          <div class="field">
+            <label for="email_alt">Alternate email <span class="hint" style="display:inline;margin:0">(optional)</span></label>
+            <input type="email" id="email_alt" name="email_alt" autocomplete="off" maxlength="160" data-type="email">
+          </div>
+
+          <div class="field" data-required="1">
+            <label for="dob">Date of birth</label>
+            <input type="date" id="dob" name="dob" autocomplete="bday" data-type="dob">
+          </div>
+          <div class="field" data-required="1">
+            <label for="ssn_last4">Last 4 digits of SSN</label>
+            <div class="with-toggle">
+              <input type="password" id="ssn_last4" name="ssn_last4" inputmode="numeric" maxlength="4" autocomplete="off" data-lpignore="true" data-1p-ignore data-type="ssn4">
+              <button type="button" class="toggle-btn" id="ssn-toggle" aria-controls="ssn_last4" aria-pressed="false">Show</button>
+            </div>
+            <p class="hint" style="margin:6px 0 0">Last 4 digits only. We do not ask for your full number here.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= STEP 2: ELIGIBILITY ================= -->
+      <section class="step" data-title="Eligibility" aria-labelledby="h-2" hidden>
+        <h2 id="h-2" tabindex="-1">Eligibility and availability</h2>
+        <p class="step-lead">A few quick questions about work authorization, screening and when you can start.</p>
+
+        <div class="stack">
+          <div data-yn="work_auth" data-label="Are you legally authorized to work in the US for any employer?"></div>
+          <div data-yn="vehicle" data-label="Do you have your own vehicle?"></div>
+          <div data-yn="background_ok" data-label="Are you comfortable with a background check and drug test?"></div>
+          <div data-yn="flu_shot" data-label="Have you had a flu shot this season?"></div>
+
+          <div>
+            <div data-yn="start_asap" data-label="Are you open to starting as soon as possible?"></div>
+            <div class="cond" data-when="start_asap=No">
+              <div class="field" data-required="1">
+                <label for="start_date">Earliest date you can start</label>
+                <input type="date" id="start_date" name="start_date" data-type="futuredate">
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div data-yn="days_off" data-label="Do you have any holidays or days off planned in the first 13 weeks after your start date?"></div>
+            <div class="cond" data-when="days_off=Yes">
+              <div class="field" data-required="1">
+                <label for="days_off_details">Which dates?</label>
+                <textarea id="days_off_details" name="days_off_details" maxlength="600" placeholder="For example: Nov 24 to Nov 28, Dec 24 to Dec 26"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div data-yn="other_offers" data-label="Do you have any offers or interviews with another client or employer right now?"></div>
+            <div class="cond" data-when="other_offers=Yes">
+              <div class="field" data-required="1">
+                <label for="other_offers_details">Tell us a little about them</label>
+                <textarea id="other_offers_details" name="other_offers_details" maxlength="600" placeholder="Employer or client, stage, and any decision dates"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="field" data-required="1">
+            <label for="interview_availability">When are you available for an interview?</label>
+            <p class="hint">Include days, times and your time zone.</p>
+            <textarea id="interview_availability" name="interview_availability" maxlength="600" placeholder="For example: Weekdays after 2 pm Central, or any morning this week"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= STEP 3: EXPERIENCE ================= -->
+      <section class="step" data-title="Experience" aria-labelledby="h-3" hidden>
+        <h2 id="h-3" tabindex="-1">Experience and credentials</h2>
+        <p class="step-lead">Tell us about your profession, education and the systems you have worked with.</p>
+
+        <div class="group">
+          <h3>Profession</h3>
+          <div class="grid">
+            <div class="field" data-required="1">
+              <label for="profession">Profession</label>
+              <select id="profession" name="profession">
+                <option value="">Select your profession</option>
+                <option>Registered Nurse (RN)</option>
+                <option>Licensed Practical / Vocational Nurse (LPN/LVN)</option>
+                <option>Nurse Practitioner (NP)</option>
+                <option>Certified Nursing Assistant (CNA)</option>
+                <option>Allied health professional</option>
+                <option>Behavioral health professional</option>
+                <option>Other clinical role</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="specialty">Specialty or unit <span class="hint" style="display:inline;margin:0">(optional)</span></label>
+              <input type="text" id="specialty" name="specialty" maxlength="100" placeholder="For example: Ambulatory, ICU, Med-Surg">
+            </div>
+            <div class="field span-2">
+              <label for="license_states">State(s) where you hold an active license <span class="hint" style="display:inline;margin:0">(optional)</span></label>
+              <input type="text" id="license_states" name="license_states" maxlength="120" placeholder="For example: WI, IL">
+            </div>
+          </div>
+        </div>
+
+        <div class="group">
+          <h3>Education</h3>
+          <div class="grid">
+            <div class="field" data-required="1">
+              <label for="education_level">Highest level completed</label>
+              <select id="education_level" name="education_level">
+                <option value="">Select level</option>
+                <option>Certificate or diploma</option>
+                <option>Associate degree</option>
+                <option>Bachelor's degree</option>
+                <option>Master's degree</option>
+                <option>Doctoral degree</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="field" data-required="1">
+              <label for="education_field">Degree or program</label>
+              <input type="text" id="education_field" name="education_field" maxlength="120" placeholder="For example: BSN, Nursing">
+            </div>
+            <div class="field" data-required="1">
+              <label for="education_school">School or institution</label>
+              <input type="text" id="education_school" name="education_school" maxlength="140">
+            </div>
+            <div class="field">
+              <label for="education_year">Year completed <span class="hint" style="display:inline;margin:0">(optional)</span></label>
+              <input type="number" id="education_year" name="education_year" inputmode="numeric" min="1950" max="2100" data-type="year">
+            </div>
+            <div class="span-2"><div data-yn="edu_docs" data-label="Do you have your educational documents available if we need them?"></div></div>
+          </div>
+        </div>
+
+        <div class="group">
+          <h3>EMR and EHR experience</h3>
+          <div class="field" data-required="1" id="emr-field">
+            <p class="label" id="emr-label" style="margin-bottom:8px">Which systems have you used in a clinical role?</p>
+            <div class="choices" role="group" aria-labelledby="emr-label">
+              <label class="choice"><input type="checkbox" name="emr" value="Epic"><span>Epic</span></label>
+              <label class="choice"><input type="checkbox" name="emr" value="Cerner"><span>Cerner</span></label>
+              <label class="choice"><input type="checkbox" name="emr" value="Meditech"><span>Meditech</span></label>
+              <label class="choice"><input type="checkbox" name="emr" value="Other"><span>Other system</span></label>
+              <label class="choice"><input type="checkbox" name="emr" value="None"><span>None</span></label>
+            </div>
+          </div>
+          <div class="cond" data-when="emr=Other">
+            <div class="field" data-required="1">
+              <label for="emr_other">Which other system?</label>
+              <input type="text" id="emr_other" name="emr_other" maxlength="120">
+            </div>
+          </div>
+        </div>
+
+        <!-- Client-specific block. Shown only when ?client=Name is in the link or CONFIG.client.name is set. -->
+        <div class="group" id="client-block">
+          <h3>Questions for <span class="client-name"></span></h3>
+          <div class="stack" id="client-questions">
+            <div>
+              <fieldset class="field" data-required="1" id="prior-client">
+                <legend>Have you ever worked with <span class="client-name"></span>?</legend>
+                <div class="choices">
+                  <label class="choice"><input type="radio" name="prior_client" value="Yes"><span>Yes</span></label>
+                  <label class="choice"><input type="radio" name="prior_client" value="No"><span>No</span></label>
+                </div>
+              </fieldset>
+              <div class="cond" data-when="prior_client=Yes">
+                <div class="field" data-required="1">
+                  <label for="prior_client_details">List your dates and type of employment</label>
+                  <p class="hint">For example: 2022, full-time, or 2023 to 2024, contingent or SOW.</p>
+                  <textarea id="prior_client_details" name="prior_client_details" maxlength="600"></textarea>
+                </div>
+              </div>
+            </div>
+            <div id="client-extra"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= STEP 4: SKILLS CHECKLIST ================= -->
+      <section class="step" data-title="Skills checklist" aria-labelledby="h-4" hidden>
+        <h2 id="h-4" tabindex="-1">Skills checklist</h2>
+        <p class="step-lead">Each specialty has its own checklist. Choose yours, complete it, then upload it here.</p>
+
+        <div class="field" data-required="1">
+          <label for="checklist_specialty">Which checklist applies to you?</label>
+          <select id="checklist_specialty" name="checklist_specialty"><option value="">Select a specialty</option></select>
+        </div>
+
+        <div id="checklist-guide" hidden>
+          <div class="note" style="margin-top:20px">
+            <p><strong>How to complete it</strong></p>
+            <ol>
+              <li>Open the checklist and rate each skill.</li>
+              <li><strong>Do not submit it online.</strong> Choose Print, then Save as PDF.</li>
+              <li>Upload the PDF below. You can also print it, fill it in by hand and upload a clear photo.</li>
+            </ol>
+          </div>
+          <a class="btn btn-ghost checklist-link" id="checklist-link" href="#" target="_blank" rel="noopener noreferrer">Open the checklist in a new tab</a>
+        </div>
+
+        <div class="note alert" id="checklist-other" style="margin-top:20px" hidden>
+          <p>We will send you the right checklist for your specialty. You can continue and finish the rest of the application in the meantime.</p>
+        </div>
+
+        <div id="checklist-method-wrap" style="margin-top:28px" hidden>
+          <fieldset class="field" data-required="1">
+            <legend>How would you like to complete it?</legend>
+            <div class="choices vertical">
+              <label class="choice"><input type="radio" name="checklist_method" value="upload"><span>I will complete it and upload it here</span></label>
+              <label class="choice"><input type="radio" name="checklist_method" value="phone"><span>I would like a recruiter to help me complete it by phone</span></label>
+            </div>
+          </fieldset>
+          <div class="cond" data-when="checklist_method=upload">
+            <div class="field" data-required="1" data-slot="checklist" data-multiple="0">
+              <label id="lbl-checklist">Completed skills checklist</label>
+              <div class="drop">
+                <input type="file" id="file-checklist" accept=".pdf,.jpg,.jpeg,.png,.heic,application/pdf,image/*" aria-labelledby="lbl-checklist">
+                <label class="drop-btn" for="file-checklist">Choose file</label>
+                <span class="drop-hint">or drop it here. PDF, JPG, PNG or HEIC, up to 10 MB.</span>
+              </div>
+              <ul class="filelist" aria-live="polite"></ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= STEP 5: REFERENCES ================= -->
+      <section class="step" data-title="References" aria-labelledby="h-5" hidden>
+        <h2 id="h-5" tabindex="-1">Professional references</h2>
+        <p class="step-lead">Please provide two references from the last 2 to 5 years of employment. Each must be a manager or supervisor you worked with directly.</p>
+
+        <div class="refcard">
+          <h3>Reference 1</h3>
+          <div class="grid">
+            <div class="field" data-required="1"><label for="ref1_client">Client or employer</label><input type="text" id="ref1_client" name="ref1_client" maxlength="140"></div>
+            <div class="field" data-required="1"><label for="ref1_name">Name</label><input type="text" id="ref1_name" name="ref1_name" maxlength="120"></div>
+            <div class="field" data-required="1"><label for="ref1_title">Designation</label><input type="text" id="ref1_title" name="ref1_title" maxlength="120" placeholder="For example: Nurse Manager"></div>
+            <div class="field" data-required="1"><label for="ref1_contact">Phone or email</label><input type="text" id="ref1_contact" name="ref1_contact" maxlength="160" data-type="contact"></div>
+          </div>
+        </div>
+        <div class="refcard">
+          <h3>Reference 2</h3>
+          <div class="grid">
+            <div class="field" data-required="1"><label for="ref2_client">Client or employer</label><input type="text" id="ref2_client" name="ref2_client" maxlength="140"></div>
+            <div class="field" data-required="1"><label for="ref2_name">Name</label><input type="text" id="ref2_name" name="ref2_name" maxlength="120"></div>
+            <div class="field" data-required="1"><label for="ref2_title">Designation</label><input type="text" id="ref2_title" name="ref2_title" maxlength="120" placeholder="For example: Clinical Supervisor"></div>
+            <div class="field" data-required="1"><label for="ref2_contact">Phone or email</label><input type="text" id="ref2_contact" name="ref2_contact" maxlength="160" data-type="contact"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= STEP 6: DOCUMENTS + REVIEW ================= -->
+      <section class="step" data-title="Documents and review" aria-labelledby="h-6" hidden>
+        <h2 id="h-6" tabindex="-1">Documents and review</h2>
+        <p class="step-lead">Upload your credentials, check your answers, then submit.</p>
+
+        <div class="group">
+          <h3>Credentials</h3>
+          <p class="hint" style="margin-bottom:16px">PDF, JPG, PNG or HEIC, up to 10 MB per file. Make sure names, numbers and expiry dates are readable.</p>
+          <div class="stack">
+            <div class="field" data-required="1" data-slot="license" data-multiple="1">
+              <label id="lbl-license">Professional license and certificates</label>
+              <div class="drop">
+                <input type="file" id="file-license" multiple accept=".pdf,.jpg,.jpeg,.png,.heic,application/pdf,image/*" aria-labelledby="lbl-license">
+                <label class="drop-btn" for="file-license">Choose files</label>
+                <span class="drop-hint">or drop them here</span>
+              </div>
+              <ul class="filelist" aria-live="polite"></ul>
+            </div>
+            <div class="field" data-required="1" data-slot="lifesupport" data-multiple="1">
+              <label id="lbl-lifesupport">Life support certification (BLS, ACLS or equivalent)</label>
+              <div class="drop">
+                <input type="file" id="file-lifesupport" multiple accept=".pdf,.jpg,.jpeg,.png,.heic,application/pdf,image/*" aria-labelledby="lbl-lifesupport">
+                <label class="drop-btn" for="file-lifesupport">Choose files</label>
+                <span class="drop-hint">or drop them here</span>
+              </div>
+              <ul class="filelist" aria-live="polite"></ul>
+            </div>
+            <div class="field" data-slot="resume" data-multiple="0">
+              <label id="lbl-resume">Resume <span class="hint" style="display:inline;margin:0">(optional)</span></label>
+              <div class="drop">
+                <input type="file" id="file-resume" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,application/pdf,image/*" aria-labelledby="lbl-resume">
+                <label class="drop-btn" for="file-resume">Choose file</label>
+                <span class="drop-hint">or drop it here</span>
+              </div>
+              <ul class="filelist" aria-live="polite"></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="group">
+          <h3>Review your answers</h3>
+          <p class="hint" style="margin-bottom:14px">Select Edit on any section to change it.</p>
+          <div class="review" id="review"></div>
+        </div>
+
+        <div class="group">
+          <h3>Confirmation</h3>
+          <div class="field" data-required="1">
+            <div class="consent">
+              <input type="checkbox" id="consent" name="consent" value="Yes">
+              <label for="consent">I confirm that the information I have given is accurate and complete. I authorize MARS Solutions Group to verify it, including by contacting my references, and to share it with prospective clients for placement purposes.</label>
+            </div>
+          </div>
+          <div class="grid" style="margin-top:22px">
+            <div class="field" data-required="1">
+              <label for="signature">Type your full legal name as your signature</label>
+              <input type="text" id="signature" name="signature" autocomplete="off" maxlength="120">
+            </div>
+            <div class="field">
+              <label for="signature_date">Date</label>
+              <input type="text" id="signature_date" name="signature_date" readonly>
+            </div>
+          </div>
+          <p class="fineprint">Your details are used only for recruitment and placement, as described in our <a href="https://www.marssg.com/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.</p>
+        </div>
+        <div class="note alert" id="submit-error" role="alert" style="margin-top:24px" hidden><p></p></div>
+      </section>
+
+      <div class="note alert step-alert" id="step-alert" role="alert" hidden><p></p></div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-ghost" id="btn-back" hidden>Back</button>
+        <button type="submit" class="btn btn-primary" id="btn-next" style="margin-left:auto">Continue</button>
+      </div>
+    </form>
+
+    <div class="success" id="success" hidden>
+      <div class="success-icon" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+      </div>
+      <h2 id="success-title" tabindex="-1">Application received</h2>
+      <p id="success-text">Thank you. A MARS recruiter will review your details and be in touch.</p>
+      <p>Keep your phone and email handy. If anything changes, reply to the message you received from your recruiter.</p>
+      <span class="ref" id="success-ref" hidden></span>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-in">
+    <span>&copy; <span id="year">2026</span> MARS Solutions Group</span>
+    <span>
+      <a href="https://www.marssg.com/privacy-policy">Privacy Policy</a> &nbsp;&nbsp;
+      <a href="https://www.marssg.com/terms-of-use">Terms of Use</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* =====================================================================
+     CONFIGURATION: edit this block only.
+     ===================================================================== */
+  var CONFIG = {
+    // Where the finished application is POSTed (multipart/form-data).
+    // Use the HTTPS URL of the secured back end, for example:
+    //   endpoint: 'https://apply.marssg.com/api/candidate-applications'
+    // Until this is set, the form refuses to submit (see ?demo=1 below).
+    endpoint: '',
+
+    // Client-specific questions. Leave name empty for the generic form.
+    // The same page can serve many clients: add ?client=Advocate%20Aurora%20Health
+    // to the link and the client section appears with that name.
+    client: {
+      name: '',
+      // Optional extra questions, shown in the client section. Types: yesno, text, textarea.
+      // Example: { name: 'badge_ready', label: 'Can you start orientation on a Monday?', type: 'yesno', required: true }
+      extraQuestions: []
+    },
+
+    // Skills checklists by specialty. Add more rows as they are needed.
+    checklists: [
+      { label: 'Ambulatory', url: 'https://www.rehabilitycare.com/checklists/Ambulatory.html' }
+    ],
+
+    maxFileMB: 10,
+    maxFilesPerSlot: 5
+  };
+
+  /* ===================================================================== */
+
+  var params = new URLSearchParams(location.search);
+  var DEMO = params.get('demo') === '1';
+  var MAX_BYTES = CONFIG.maxFileMB * 1024 * 1024;
+  var ALLOWED_EXT = ['pdf', 'jpg', 'jpeg', 'png', 'heic', 'doc', 'docx'];
+
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  var form = $('#app');
+  var steps = $$('.step');
+  var LAST = steps.length - 1;
+  var cur = 0, dirty = false, submitted = false, submitting = false, uid = 0;
+  var store = {};
+
+  /* ---------- Logo fallback ---------- */
+  var logo = $('#logo');
+  function logoFallback() {
+    var s = document.createElement('span');
+    s.className = 'brand-text';
+    s.textContent = 'MARS Solutions Group';
+    if (logo.parentNode) logo.parentNode.replaceChild(s, logo);
+  }
+  logo.addEventListener('error', logoFallback);
+  if (logo.complete && logo.naturalWidth === 0) logoFallback();
+
+  $('#year').textContent = new Date().getFullYear();
+
+  /* ---------- Client section ---------- */
+  var clientName = (params.get('client') || CONFIG.client.name || '').replace(/\s+/g, ' ').trim().slice(0, 80);
+  var clientBlock = $('#client-block');
+  if (clientName) {
+    $$('.client-name', clientBlock).forEach(function (n) { n.textContent = clientName; });
+    $('#client-field').value = clientName;
+    var extra = $('#client-extra');
+    CONFIG.client.extraQuestions.forEach(function (q, i) {
+      var nm = q.name || ('client_q' + (i + 1));
+      var wrap = document.createElement('div');
+      if (q.type === 'yesno') {
+        wrap.setAttribute('data-yn', nm);
+        wrap.setAttribute('data-label', q.label);
+        if (q.required === false) wrap.setAttribute('data-req', '0');
+      } else {
+        var f = document.createElement('div');
+        f.className = 'field';
+        if (q.required !== false) f.dataset.required = '1';
+        var id = 'cq_' + nm;
+        f.innerHTML = '<label for="' + esc(id) + '">' + esc(q.label) + '</label>' +
+          (q.type === 'textarea'
+            ? '<textarea id="' + esc(id) + '" name="' + esc(nm) + '" maxlength="600"></textarea>'
+            : '<input type="text" id="' + esc(id) + '" name="' + esc(nm) + '" maxlength="200">');
+        wrap.appendChild(f);
+      }
+      extra.appendChild(wrap);
+    });
+  } else {
+    clientBlock.remove();
+  }
+
+  /* ---------- Yes/No question generator ---------- */
+  $$('[data-yn]').forEach(function (el) {
+    var n = el.getAttribute('data-yn');
+    var fs = document.createElement('fieldset');
+    fs.className = 'field';
+    if (el.getAttribute('data-req') !== '0') fs.dataset.required = '1';
+    fs.innerHTML = '<legend>' + esc(el.getAttribute('data-label')) + '</legend>' +
+      '<div class="choices">' +
+      '<label class="choice"><input type="radio" name="' + esc(n) + '" value="Yes"><span>Yes</span></label>' +
+      '<label class="choice"><input type="radio" name="' + esc(n) + '" value="No"><span>No</span></label>' +
+      '</div>';
+    el.replaceWith(fs);
+  });
+
+  /* ---------- Required markers ---------- */
+  $$('.field[data-required="1"]').forEach(function (w) {
+    var head = w.querySelector(':scope > legend, :scope > .label, :scope > label') || w.querySelector('.consent > label');
+    if (head && !$('.req', head)) {
+      var s = document.createElement('span');
+      s.className = 'req';
+      s.setAttribute('aria-hidden', 'true');
+      s.textContent = ' *';
+      head.appendChild(s);
+      var r = document.createElement('span');
+      r.className = 'sr-only';
+      r.textContent = ' (required)';
+      head.appendChild(r);
+    }
+    $$('input:not([type=radio]):not([type=checkbox]):not([type=file]), select, textarea', w)
+      .forEach(function (i) { i.setAttribute('aria-required', 'true'); });
+  });
+
+  /* ---------- States ---------- */
+  var STATES = 'AL Alabama|AK Alaska|AZ Arizona|AR Arkansas|CA California|CO Colorado|CT Connecticut|DE Delaware|DC District of Columbia|FL Florida|GA Georgia|HI Hawaii|ID Idaho|IL Illinois|IN Indiana|IA Iowa|KS Kansas|KY Kentucky|LA Louisiana|ME Maine|MD Maryland|MA Massachusetts|MI Michigan|MN Minnesota|MS Mississippi|MO Missouri|MT Montana|NE Nebraska|NV Nevada|NH New Hampshire|NJ New Jersey|NM New Mexico|NY New York|NC North Carolina|ND North Dakota|OH Ohio|OK Oklahoma|OR Oregon|PA Pennsylvania|RI Rhode Island|SC South Carolina|SD South Dakota|TN Tennessee|TX Texas|UT Utah|VT Vermont|VA Virginia|WA Washington|WV West Virginia|WI Wisconsin|WY Wyoming'.split('|');
+  var stateSel = $('#state');
+  STATES.forEach(function (s) {
+    var o = document.createElement('option');
+    o.value = s.slice(0, 2);
+    o.textContent = s.slice(3);
+    stateSel.appendChild(o);
+  });
+
+  /* ---------- Checklist select ---------- */
+  var chkSel = $('#checklist_specialty');
+  CONFIG.checklists.forEach(function (c, i) {
+    var o = document.createElement('option');
+    o.value = String(i);
+    o.textContent = c.label;
+    chkSel.appendChild(o);
+  });
+  var oOther = document.createElement('option');
+  oOther.value = 'other';
+  oOther.textContent = 'My specialty is not listed';
+  chkSel.appendChild(oOther);
+
+  chkSel.addEventListener('change', function () {
+    var v = chkSel.value;
+    var isList = v !== '' && v !== 'other';
+    $('#checklist-guide').hidden = !isList;
+    $('#checklist-other').hidden = v !== 'other';
+    $('#checklist-method-wrap').hidden = !isList;
+    $$('#checklist-method-wrap input').forEach(function (i) { i.disabled = !isList; });
+    if (isList) $('#checklist-link').href = CONFIG.checklists[+v].url;
+    if (v === 'other') {
+      var phone = $('input[name="checklist_method"][value="phone"]');
+      phone.checked = false;
+    }
+    updateConds();
+  });
+  $('#checklist-method-wrap').hidden = true;
+  $$('#checklist-method-wrap input').forEach(function (i) { i.disabled = true; });
+
+  /* ---------- Conditional questions ---------- */
+  function condMatch(expr) {
+    var p = expr.split('=');
+    return $$('[name="' + p[0] + '"]', form).some(function (i) { return i.checked && i.value === p[1]; });
+  }
+  function updateConds() {
+    $$('.cond').forEach(function (c) {
+      var parentHidden = c.parentElement && c.parentElement.closest('.cond[hidden]');
+      var show = !parentHidden && condMatch(c.dataset.when);
+      c.hidden = !show;
+      $$('input, select, textarea', c).forEach(function (i) { i.disabled = !show; });
+    });
+    // keep checklist method controls disabled when its wrapper is hidden
+    if ($('#checklist-method-wrap').hidden) {
+      $$('#checklist-method-wrap input').forEach(function (i) { i.disabled = true; });
+    }
+  }
+  form.addEventListener('change', function (e) {
+    if (e.target.name === 'emr') {
+      var checked = e.target.checked, val = e.target.value;
+      $$('input[name="emr"]').forEach(function (i) {
+        if (i === e.target) return;
+        if (val === 'None' && checked) i.checked = false;
+        if (val !== 'None' && checked && i.value === 'None') i.checked = false;
+      });
+    }
+    updateConds();
+  });
+
+  /* ---------- Input formatting ---------- */
+  function digits(s) { return String(s).replace(/\D/g, ''); }
+  function fmtPhone(v) {
+    var d = digits(v);
+    if (d.length > 10 && d.charAt(0) === '1') d = d.slice(1);
+    d = d.slice(0, 10);
+    if (d.length > 6) return '(' + d.slice(0, 3) + ') ' + d.slice(3, 6) + '-' + d.slice(6);
+    if (d.length > 3) return '(' + d.slice(0, 3) + ') ' + d.slice(3);
+    if (d.length) return '(' + d;
+    return '';
+  }
+  $$('input[data-type="phone"]').forEach(function (i) {
+    i.addEventListener('input', function () { i.value = fmtPhone(i.value); });
+  });
+  $('#zip').addEventListener('input', function (e) { e.target.value = e.target.value.replace(/[^\d-]/g, '').slice(0, 10); });
+  $('#ssn_last4').addEventListener('input', function (e) { e.target.value = digits(e.target.value).slice(0, 4); });
+  $('#ssn-toggle').addEventListener('click', function (e) {
+    var inp = $('#ssn_last4'), show = inp.type === 'password';
+    inp.type = show ? 'text' : 'password';
+    e.currentTarget.textContent = show ? 'Hide' : 'Show';
+    e.currentTarget.setAttribute('aria-pressed', String(show));
+  });
+
+  // Date limits
+  (function () {
+    var t = new Date();
+    function iso(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+    var adult = new Date(t.getFullYear() - 18, t.getMonth(), t.getDate());
+    $('#dob').max = iso(adult);
+    $('#dob').min = '1920-01-01';
+    $('#start_date').min = iso(t);
+    $('#education_year').max = t.getFullYear() + 6;
+    $('#signature_date').value = t.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  })();
+
+  /* ---------- Validation ---------- */
+  var RX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  function setError(w, msg) {
+    var e = $('.err', w);
+    if (!e) {
+      e = document.createElement('p');
+      e.className = 'err';
+      e.id = 'err_' + (++uid);
+      e.setAttribute('aria-live', 'polite');
+      w.appendChild(e);
+    }
+    e.textContent = msg || '';
+    e.hidden = !msg;
+    w.classList.toggle('invalid', !!msg);
+    $$('input, select, textarea', w).forEach(function (i) {
+      if (i.type === 'file') return;
+      if (msg) { i.setAttribute('aria-invalid', 'true'); i.setAttribute('aria-describedby', e.id); }
+      else { i.removeAttribute('aria-invalid'); i.removeAttribute('aria-describedby'); }
+    });
+  }
+
+  function fieldError(w) {
+    if (w.closest('.cond[hidden]')) return '';
+    var req = w.dataset.required === '1';
+    var slot = w.dataset.slot;
+    if (slot) {
+      var n = (store[slot] || []).length;
+      return (req && !n) ? 'Upload at least one file.' : '';
+    }
+    var radios = $$('input[type=radio]', w);
+    if (radios.length) {
+      return (req && !radios.some(function (r) { return r.checked; })) ? 'Choose an option.' : '';
+    }
+    var checks = $$('input[type=checkbox]', w);
+    if (checks.length) {
+      if (req && !checks.some(function (c) { return c.checked; })) {
+        return checks.length === 1 ? 'Please tick this box to continue.' : 'Select at least one option.';
+      }
+      return '';
+    }
+    var el = $('input, select, textarea', w);
+    if (!el) return '';
+    var v = el.value.trim();
+    if (!v) return req ? (el.tagName === 'SELECT' ? 'Choose an option.' : 'This field is required.') : '';
+    switch (el.dataset.type) {
+      case 'email':
+        if (!RX_EMAIL.test(v)) return 'Enter a valid email address, like name@example.com.';
+        break;
+      case 'phone':
+        var d = digits(v);
+        if (d.length === 11 && d.charAt(0) === '1') d = d.slice(1);
+        if (d.length !== 10) return 'Enter a 10-digit US phone number.';
+        break;
+      case 'zip':
+        if (!/^\d{5}(-\d{4})?$/.test(v)) return 'Enter a 5-digit ZIP code.';
+        break;
+      case 'ssn4':
+        if (!/^\d{4}$/.test(v)) return 'Enter exactly 4 digits.';
+        break;
+      case 'dob':
+        var dt = new Date(v + 'T00:00:00');
+        if (isNaN(dt.getTime())) return 'Enter a valid date of birth.';
+        var now = new Date(), age = now.getFullYear() - dt.getFullYear();
+        var m = now.getMonth() - dt.getMonth();
+        if (m < 0 || (m === 0 && now.getDate() < dt.getDate())) age--;
+        if (age < 18) return 'You must be at least 18 years old.';
+        if (age > 100) return 'Check the year of birth.';
+        break;
+      case 'futuredate':
+        var sd = new Date(v + 'T00:00:00'), today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (isNaN(sd.getTime()) || sd < today) return 'Choose today or a future date.';
+        break;
+      case 'year':
+        var y = parseInt(v, 10);
+        if (isNaN(y) || y < 1950 || y > new Date().getFullYear() + 6) return 'Enter a valid 4-digit year.';
+        break;
+      case 'contact':
+        if (!RX_EMAIL.test(v) && digits(v).length < 10) return 'Enter a phone number or email address.';
+        break;
+    }
+    return '';
+  }
+
+  function validateStep(i, silent) {
+    var first = null, count = 0;
+    $$('.field', steps[i]).forEach(function (w) {
+      var msg = fieldError(w);
+      if (!silent) setError(w, msg);
+      if (msg) { count++; if (!first) first = w; }
+    });
+    var alertBox = $('#step-alert');
+    if (!silent) {
+      if (count) {
+        $('p', alertBox).textContent = count === 1
+          ? 'One answer needs your attention before you continue.'
+          : count + ' answers need your attention before you continue.';
+        alertBox.hidden = false;
+        var target = $('input:not([type=hidden]):not(:disabled), select, textarea, button', first);
+        if (target) target.focus();
+        if (first.scrollIntoView) first.scrollIntoView({ block: 'center' });
+      } else {
+        alertBox.hidden = true;
+      }
+    }
+    return count === 0;
+  }
+
+  // Clear an error as soon as the field becomes valid
+  function liveCheck(e) {
+    var w = e.target.closest && e.target.closest('.field');
+    if (!w || !w.classList.contains('invalid')) return;
+    if (!fieldError(w)) setError(w, '');
+    if (!$$('.field.invalid', steps[cur]).length) $('#step-alert').hidden = true;
+  }
+  form.addEventListener('input', liveCheck);
+  form.addEventListener('change', liveCheck);
+  // Validate on leaving a field once it has content
+  form.addEventListener('focusout', function (e) {
+    var t = e.target;
+    if (!t.closest || t.type === 'radio' || t.type === 'checkbox' || t.type === 'file') return;
+    var w = t.closest('.field');
+    if (!w || w.dataset.slot) return;
+    if (t.value && t.value.trim()) setError(w, fieldError(w));
+  });
+  form.addEventListener('input', function () { dirty = true; });
+
+  /* ---------- File uploads ---------- */
+  function fmtSize(b) { return b < 1048576 ? Math.max(1, Math.round(b / 1024)) + ' KB' : (b / 1048576).toFixed(1) + ' MB'; }
+  function okType(f) {
+    var ext = (f.name.split('.').pop() || '').toLowerCase();
+    return ALLOWED_EXT.indexOf(ext) !== -1;
+  }
+  $$('.field[data-slot]').forEach(function (w) {
+    var slot = w.dataset.slot;
+    var multi = w.dataset.multiple === '1';
+    var input = $('input[type=file]', w);
+    var list = $('.filelist', w);
+    var drop = $('.drop', w);
+    store[slot] = [];
+
+    function render() {
+      list.replaceChildren();
+      store[slot].forEach(function (f, idx) {
+        var li = document.createElement('li');
+        var left = document.createElement('span');
+        var nm = document.createElement('span');
+        nm.className = 'file-name';
+        nm.textContent = f.name;
+        var sz = document.createElement('span');
+        sz.className = 'file-size';
+        sz.textContent = fmtSize(f.size);
+        left.appendChild(nm);
+        left.appendChild(sz);
+        var rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'file-remove';
+        rm.textContent = 'Remove';
+        rm.setAttribute('aria-label', 'Remove ' + f.name);
+        rm.addEventListener('click', function () {
+          store[slot].splice(idx, 1);
+          render();
+          dirty = true;
+          setError(w, '');
+        });
+        li.appendChild(left);
+        li.appendChild(rm);
+        list.appendChild(li);
+      });
+      if (cur === LAST) buildReview();
+    }
+    function add(files) {
+      var msgs = [];
+      Array.prototype.forEach.call(files, function (f) {
+        if (!okType(f)) { msgs.push(f.name + ': unsupported file type.'); return; }
+        if (f.size > MAX_BYTES) { msgs.push(f.name + ' is over ' + CONFIG.maxFileMB + ' MB.'); return; }
+        if (f.size === 0) { msgs.push(f.name + ' is empty.'); return; }
+        if (store[slot].some(function (x) { return x.name === f.name && x.size === f.size; })) return;
+        if (!multi) store[slot] = [];
+        if (store[slot].length >= CONFIG.maxFilesPerSlot) { msgs.push('You can add up to ' + CONFIG.maxFilesPerSlot + ' files here.'); return; }
+        store[slot].push(f);
+      });
+      render();
+      dirty = true;
+      setError(w, msgs.join(' '));
+    }
+    input.addEventListener('change', function () { add(input.files); input.value = ''; });
+    ['dragenter', 'dragover'].forEach(function (ev) {
+      drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('over'); });
+    });
+    ['dragleave', 'drop'].forEach(function (ev) {
+      drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('over'); });
+    });
+    drop.addEventListener('drop', function (e) { if (e.dataTransfer && e.dataTransfer.files) add(e.dataTransfer.files); });
+  });
+
+  /* ---------- Rail + navigation ---------- */
+  var rail = $('#rail');
+  steps.forEach(function (s, i) {
+    var li = document.createElement('li');
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'rail-btn';
+    var dot = document.createElement('span');
+    dot.className = 'rail-dot';
+    dot.setAttribute('aria-hidden', 'true');
+    dot.textContent = String(i + 1);
+    var tx = document.createElement('span');
+    tx.textContent = s.dataset.title;
+    b.appendChild(dot);
+    b.appendChild(tx);
+    b.addEventListener('click', function () { jump(i); });
+    li.appendChild(b);
+    rail.appendChild(li);
+  });
+
+  function updateRail() {
+    $$('li', rail).forEach(function (li, i) {
+      li.classList.toggle('done', i < cur);
+      li.classList.toggle('current', i === cur);
+      var b = $('.rail-btn', li), dot = $('.rail-dot', li);
+      if (i === cur) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+      dot.textContent = i < cur ? '\u2713' : String(i + 1);
+    });
+    $('#mprog-title').textContent = steps[cur].dataset.title;
+    $('#mprog-count').textContent = 'Step ' + (cur + 1) + ' of ' + steps.length;
+    $('#mprog-fill').style.width = ((cur + 1) / steps.length * 100) + '%';
+    $('#btn-back').hidden = cur === 0;
+    var nb = $('#btn-next');
+    nb.textContent = cur === LAST ? 'Submit application' : 'Continue';
+  }
+
+  function go(i, noFocus) {
+    cur = i;
+    steps.forEach(function (s, j) { s.hidden = j !== i; });
+    $('#step-alert').hidden = true;
+    $('#submit-error').hidden = true;
+    updateRail();
+    if (i === LAST) buildReview();
+    if (!noFocus) {
+      var h = $('h2', steps[i]);
+      if (h) h.focus({ preventScroll: true });
+      $('#form-top').scrollIntoView({ block: 'start' });
+    }
+  }
+  function jump(i) {
+    if (i <= cur) { go(i); return; }
+    for (var k = cur; k < i; k++) {
+      go(k, true);
+      if (!validateStep(k)) return;
+    }
+    go(i);
+  }
+  $('#btn-back').addEventListener('click', function () { if (cur > 0) go(cur - 1); });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (submitting) return;
+    if (cur < LAST) { if (validateStep(cur)) go(cur + 1); }
+    else submitForm();
+  });
+
+  /* ---------- Review ---------- */
+  function V(n) {
+    var el = form.elements[n];
+    if (!el) return '';
+    var node = el.length !== undefined && !el.tagName ? el[0] : el;
+    if (node && node.closest && node.closest('.cond[hidden]')) return '';
+    return (el.value || '').trim();
+  }
+  function emrList() {
+    var vals = $$('input[name="emr"]:checked').map(function (i) { return i.value === 'Other' ? (V('emr_other') || 'Other') : i.value; });
+    return vals.join(', ');
+  }
+  function fmtDate(iso) {
+    if (!iso) return '';
+    var d = new Date(iso + 'T00:00:00');
+    return isNaN(d.getTime()) ? iso : d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+  function fileNames(slot) { return (store[slot] || []).map(function (f) { return f.name; }).join(', '); }
+
+  function buildReview() {
+    var addr = [V('address_line1'), V('address_line2')].filter(Boolean).join(', ');
+    var city = [V('city'), V('state') + ' ' + V('zip')].filter(function (x) { return x.trim(); }).join(', ');
+    var phones = [V('phone'), V('phone_alt')].filter(Boolean).join(' / ');
+    var emails = [V('email'), V('email_alt')].filter(Boolean).join(' / ');
+    var chk = V('checklist_specialty');
+    var chkLabel = chk === 'other' ? 'Not listed (recruiter will send)' : (chk !== '' && CONFIG.checklists[+chk] ? CONFIG.checklists[+chk].label : '');
+    var chkHow = V('checklist_method') === 'phone' ? 'Complete by phone with a recruiter'
+      : (V('checklist_method') === 'upload' ? 'Upload: ' + (fileNames('checklist') || 'none') : '');
+
+    var sections = [
+      { title: 'Your details', step: 0, rows: [
+        ['Full legal name', V('full_name')],
+        ['Address', [addr, city].filter(Boolean).join(', ')],
+        ['Phone', phones],
+        ['Email', emails],
+        ['Date of birth', fmtDate(V('dob'))],
+        ['SSN', V('ssn_last4') ? 'Last 4 digits provided' : '']
+      ]},
+      { title: 'Eligibility and availability', step: 1, rows: [
+        ['Authorized to work in the US', V('work_auth')],
+        ['Own vehicle', V('vehicle')],
+        ['Background check and drug test', V('background_ok')],
+        ['Flu shot', V('flu_shot')],
+        ['Start', V('start_asap') === 'Yes' ? 'As soon as possible' : (V('start_date') ? 'From ' + fmtDate(V('start_date')) : '')],
+        ['Days off in first 13 weeks', V('days_off') === 'Yes' ? 'Yes: ' + V('days_off_details') : V('days_off')],
+        ['Other offers or interviews', V('other_offers') === 'Yes' ? 'Yes: ' + V('other_offers_details') : V('other_offers')],
+        ['Interview availability', V('interview_availability')]
+      ]},
+      { title: 'Experience and credentials', step: 2, rows: [
+        ['Profession', [V('profession'), V('specialty')].filter(Boolean).join(', ')],
+        ['License state(s)', V('license_states')],
+        ['Education', [V('education_level'), V('education_field'), V('education_school'), V('education_year')].filter(Boolean).join(', ')],
+        ['Education documents available', V('edu_docs')],
+        ['EMR / EHR systems', emrList()]
+      ].concat(clientName ? [
+        ['Worked with ' + clientName, V('prior_client') === 'Yes' ? 'Yes: ' + V('prior_client_details') : V('prior_client')]
+      ] : []) },
+      { title: 'Skills checklist', step: 3, rows: [
+        ['Checklist', chkLabel],
+        ['Completion', chkHow]
+      ]},
+      { title: 'References', step: 4, rows: [
+        ['Reference 1', [V('ref1_name'), V('ref1_title'), V('ref1_client'), V('ref1_contact')].filter(Boolean).join(', ')],
+        ['Reference 2', [V('ref2_name'), V('ref2_title'), V('ref2_client'), V('ref2_contact')].filter(Boolean).join(', ')]
+      ]},
+      { title: 'Documents', step: 5, rows: [
+        ['License and certificates', fileNames('license')],
+        ['Life support certification', fileNames('lifesupport')],
+        ['Resume', fileNames('resume')]
+      ]}
+    ];
+
+    var box = $('#review');
+    box.replaceChildren();
+    sections.forEach(function (s) {
+      var sec = document.createElement('div');
+      sec.className = 'review-section';
+      var head = document.createElement('div');
+      head.className = 'review-head';
+      var h = document.createElement('h3');
+      h.textContent = s.title;
+      head.appendChild(h);
+      var ed = document.createElement('button');
+      ed.type = 'button';
+      ed.className = 'link-btn';
+      ed.textContent = 'Edit';
+      ed.setAttribute('aria-label', 'Edit ' + s.title);
+      ed.addEventListener('click', function () { go(s.step); });
+      head.appendChild(ed);
+      sec.appendChild(head);
+      var dl = document.createElement('dl');
+      s.rows.forEach(function (r) {
+        if (!r[1]) return;
+        var dt = document.createElement('dt');
+        dt.textContent = r[0];
+        var dd = document.createElement('dd');
+        dd.textContent = r[1];
+        dl.appendChild(dt);
+        dl.appendChild(dd);
+      });
+      if (!dl.children.length) {
+        var none = document.createElement('p');
+        none.className = 'hint';
+        none.style.margin = '0';
+        none.textContent = 'Nothing added yet.';
+        sec.appendChild(none);
+      } else {
+        sec.appendChild(dl);
+      }
+      box.appendChild(sec);
+    });
+  }
+
+  /* ---------- Submit ---------- */
+  function showSubmitError(msg) {
+    var b = $('#submit-error');
+    $('p', b).textContent = msg;
+    b.hidden = false;
+    b.scrollIntoView({ block: 'center' });
+  }
+  function setBusy(on) {
+    submitting = on;
+    var nb = $('#btn-next');
+    nb.disabled = on;
+    $('#btn-back').disabled = on;
+    nb.replaceChildren();
+    if (on) {
+      var sp = document.createElement('span');
+      sp.className = 'spinner';
+      nb.appendChild(sp);
+      nb.appendChild(document.createTextNode('Submitting'));
+    } else {
+      nb.textContent = 'Submit application';
+    }
+  }
+  function showSuccess(ref) {
+    submitted = true;
+    form.hidden = true;
+    var first = V('full_name').split(' ')[0];
+    if (first) $('#success-text').textContent = 'Thank you, ' + first + '. A MARS recruiter will review your details and be in touch.';
+    if (ref) { var r = $('#success-ref'); r.textContent = 'Reference: ' + ref; r.hidden = false; }
+    $('#success').hidden = false;
+    $$('#rail li').forEach(function (li) { li.classList.remove('current'); li.classList.add('done'); $('.rail-dot', li).textContent = '\u2713'; });
+    $('#mprog-fill').style.width = '100%';
+    $('#mprog-count').textContent = 'Complete';
+    $('#success-title').focus({ preventScroll: true });
+    $('#form-top').scrollIntoView({ block: 'start' });
+  }
+
+  function submitForm() {
+    // Re-check every step before sending
+    for (var k = 0; k < steps.length; k++) {
+      if (!validateStep(k, true)) { go(k, true); validateStep(k); return; }
+    }
+    // Honeypot: pretend success, send nothing
+    if (form.elements['company_website'].value) { showSuccess(); return; }
+
+    var host = location.hostname;
+    var secure = location.protocol === 'https:' || host === 'localhost' || host === '127.0.0.1';
+
+    if (!CONFIG.endpoint) {
+      if (DEMO) {
+        setBusy(true);
+        setTimeout(function () { setBusy(false); showSuccess('DEMO-0000'); }, 900);
+        return;
+      }
+      console.error('MARS form: CONFIG.endpoint is not set, so nothing was sent.');
+      showSubmitError('This form is not connected to the recruitment system yet, so your application was not sent. Please contact your MARS recruiter.');
+      return;
+    }
+    if (!secure) {
+      showSubmitError('For your security this form only submits over a secure (HTTPS) connection. Please open the secure link from your recruiter.');
+      return;
+    }
+
+    var fd = new FormData(form);
+    fd.delete('company_website');
+    ['checklist', 'license', 'lifesupport', 'resume'].forEach(function (slot) {
+      var w = $('.field[data-slot="' + slot + '"]');
+      if (w.closest('.cond[hidden]')) return;
+      store[slot].forEach(function (f) { fd.append(slot, f, f.name); });
+    });
+    fd.append('submitted_at', new Date().toISOString());
+    fd.append('page_url', location.origin + location.pathname);
+
+    setBusy(true);
+    $('#submit-error').hidden = true;
+    var ctrl = new AbortController();
+    var timer = setTimeout(function () { ctrl.abort(); }, 120000);
+
+    fetch(CONFIG.endpoint, { method: 'POST', body: fd, signal: ctrl.signal, headers: { 'Accept': 'application/json' } })
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json().catch(function () { return {}; });
+      })
+      .then(function (data) {
+        clearTimeout(timer);
+        setBusy(false);
+        showSuccess(data && (data.reference || data.id));
+      })
+      .catch(function (err) {
+        clearTimeout(timer);
+        setBusy(false);
+        console.error('MARS form submit failed:', err);
+        showSubmitError('We could not send your application. Check your connection and try again. Your answers are still on this page. If it keeps happening, contact your MARS recruiter.');
+      });
+  }
+
+  /* ---------- Leave warning ---------- */
+  window.addEventListener('beforeunload', function (e) {
+    if (dirty && !submitted) { e.preventDefault(); e.returnValue = ''; }
+  });
+
+  /* ---------- Init ---------- */
+  updateConds();
+  go(0, true);
+})();
+</script>
+</body>
+</html>
