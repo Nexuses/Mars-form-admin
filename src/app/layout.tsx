@@ -15,6 +15,13 @@ export const metadata: Metadata = {
   description:
     "Submit your details securely to the MARS Solutions Group healthcare recruitment team.",
   robots: { index: false, follow: false },
+  icons: {
+    icon: [
+      { url: "/favicon.png", type: "image/png" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-icon.png", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
