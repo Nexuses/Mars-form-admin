@@ -83,7 +83,7 @@ function buildReview(
             ? `Yes: ${values.other_offers_details}`
             : values.other_offers,
         ],
-        ["Interview availability", values.interview_availability],
+        ["Preferred interview times", values.interview_availability],
       ],
     },
     {

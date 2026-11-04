@@ -116,7 +116,7 @@ export function StepEligibility({
         <div>
           <YesNoField
             name="other_offers"
-            label="Do you have any offers or interviews with another client or employer right now?"
+            label="Do you currently have any offers or interviews in process with another client or employer?"
             value={values.other_offers}
             error={errors.other_offers}
             onChange={(v) => onChange("other_offers", v)}
@@ -146,7 +146,7 @@ export function StepEligibility({
 
         <FieldWrap error={errors.interview_availability}>
           <label htmlFor="interview_availability">
-            When are you available for an interview?
+            What are your preferred times for an interview?
             <ReqMark />
           </label>
           <p className="hint">Include days, times and your time zone.</p>

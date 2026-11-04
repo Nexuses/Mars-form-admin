@@ -29,6 +29,7 @@ export function ApplicationForm() {
   const searchParams = useSearchParams();
   const [values, setValues] = useState<FormValues>(() => ({
     ...INITIAL_VALUES,
+    client: FORM_CONFIG.clientName,
     form_version: FORM_CONFIG.formVersion,
     signature_date: todaySignatureDate(),
   }));
@@ -44,13 +45,15 @@ export function ApplicationForm() {
   const headingRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const client = (searchParams.get("client") || "")
+    const fromLink = (searchParams.get("client") || "")
       .replace(/\s+/g, " ")
       .trim()
       .slice(0, 80);
-    if (client) {
-      setValues((v) => ({ ...v, client }));
-    }
+    const client =
+      fromLink.toLowerCase() === "none"
+        ? ""
+        : fromLink || FORM_CONFIG.clientName;
+    setValues((v) => ({ ...v, client }));
   }, [searchParams]);
 
   useEffect(() => {

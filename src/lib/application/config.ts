@@ -1,4 +1,15 @@
-export type ChecklistItem = { label: string; url: string };
+import { CHECKLISTS } from "./checklists";
+
+/**
+ * A checklist either links out to an external page (`url`) or opens a MARS
+ * checklist bundled under `public/checklists` (`page`).
+ */
+export type ChecklistItem = {
+  group: string;
+  label: string;
+  url?: string;
+  page?: string;
+};
 
 export type ExtraQuestion = {
   name: string;
@@ -8,16 +19,34 @@ export type ExtraQuestion = {
 };
 
 export const FORM_CONFIG = {
-  checklists: [
-    {
-      label: "Ambulatory",
-      url: "https://www.rehabilitycare.com/checklists/Ambulatory.html",
-    },
-  ] as ChecklistItem[],
+  /** Used unless the link carries its own ?client=. Use ?client=none to hide it. */
+  clientName: "Advocate Aurora Health",
+  checklists: CHECKLISTS,
+  checklistPagesPath: "/checklists/",
   maxFileMB: 10,
   maxFilesPerSlot: 5,
   formVersion: "1.0",
 };
+
+export function checklistHref(item: ChecklistItem): string {
+  return item.page
+    ? FORM_CONFIG.checklistPagesPath + encodeURIComponent(item.page)
+    : (item.url as string);
+}
+
+/** Checklist options grouped for the specialty <select>. */
+export function checklistGroups(): { group: string; items: { index: number; item: ChecklistItem }[] }[] {
+  const groups: { group: string; items: { index: number; item: ChecklistItem }[] }[] = [];
+  CHECKLISTS.forEach((item, index) => {
+    let bucket = groups.find((g) => g.group === item.group);
+    if (!bucket) {
+      bucket = { group: item.group, items: [] };
+      groups.push(bucket);
+    }
+    bucket.items.push({ index, item });
+  });
+  return groups;
+}
 
 export const STEP_TITLES = [
   "Your details",

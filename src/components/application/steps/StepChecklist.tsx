@@ -1,7 +1,13 @@
 "use client";
 
-import { FORM_CONFIG } from "@/lib/application/config";
+import { useState } from "react";
+import {
+  FORM_CONFIG,
+  checklistGroups,
+  checklistHref,
+} from "@/lib/application/config";
 import type { FieldErrors, FileStore, FormValues } from "@/lib/application/types";
+import { ChecklistViewer } from "../ChecklistViewer";
 import { FieldWrap, FileDrop, ReqMark } from "../ui";
 
 export function StepChecklist({
@@ -17,12 +23,14 @@ export function StepChecklist({
   onChange: <K extends keyof FormValues>(key: K, value: FormValues[K]) => void;
   onFiles: (slot: "checklist", next: File[], message?: string) => void;
 }) {
+  const [viewerOpen, setViewerOpen] = useState(false);
   const v = values.checklist_specialty;
   const isListed = v !== "" && v !== "other";
   const checklist =
     isListed && FORM_CONFIG.checklists[Number(v)]
       ? FORM_CONFIG.checklists[Number(v)]
       : null;
+  const isEmbedded = Boolean(checklist?.page);
 
   return (
     <section className="step" aria-labelledby="h-4">
@@ -53,10 +61,14 @@ export function StepChecklist({
           }}
         >
           <option value="">Select a specialty</option>
-          {FORM_CONFIG.checklists.map((c, i) => (
-            <option key={c.label} value={String(i)}>
-              {c.label}
-            </option>
+          {checklistGroups().map((g) => (
+            <optgroup key={g.group} label={g.group}>
+              {g.items.map(({ index, item }) => (
+                <option key={`${g.group}-${item.label}`} value={String(index)}>
+                  {item.label}
+                </option>
+              ))}
+            </optgroup>
           ))}
           <option value="other">My specialty is not listed</option>
         </select>
@@ -83,13 +95,26 @@ export function StepChecklist({
           <a
             className="btn btn-ghost checklist-link"
             id="checklist-link"
-            href={checklist.url}
+            href={checklistHref(checklist)}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(e) => {
+              if (!isEmbedded) return;
+              e.preventDefault();
+              setViewerOpen(true);
+            }}
           >
-            Open the checklist in a new tab
+            {isEmbedded ? "Open the checklist" : "Open the checklist in a new tab"}
           </a>
         </div>
+      ) : null}
+
+      {viewerOpen && checklist ? (
+        <ChecklistViewer
+          title={checklist.label}
+          src={checklistHref(checklist)}
+          onClose={() => setViewerOpen(false)}
+        />
       ) : null}
 
       {v === "other" ? (

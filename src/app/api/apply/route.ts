@@ -260,7 +260,7 @@ export async function POST(request: Request) {
               : getStr(form, "other_offers"),
         },
         {
-          label: "Interview availability",
+          label: "Preferred interview times",
           value: getStr(form, "interview_availability"),
         },
       ]),
