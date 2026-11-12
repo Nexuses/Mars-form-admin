@@ -1,4 +1,5 @@
 import {
+  DeleteObjectCommand,
   GetObjectCommand,
   PutObjectCommand,
   S3Client,
@@ -99,4 +100,13 @@ export async function getSignedDownloadUrl(
       : undefined,
   });
   return getSignedUrl(getS3Client(), command, { expiresIn });
+}
+
+export async function deleteObjectFromS3(key: string): Promise<void> {
+  await getS3Client().send(
+    new DeleteObjectCommand({
+      Bucket: getS3Bucket(),
+      Key: key,
+    }),
+  );
 }

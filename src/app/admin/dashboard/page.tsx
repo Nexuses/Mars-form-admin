@@ -119,6 +119,7 @@ export default async function AdminOverviewPage() {
                       <Link
                         href={`/admin/dashboard/applications/${String(app._id)}`}
                         className="dash-link"
+                        prefetch
                       >
                         Open
                       </Link>

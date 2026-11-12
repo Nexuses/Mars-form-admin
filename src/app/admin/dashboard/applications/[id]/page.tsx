@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { connection } from "next/server";
 import { notFound } from "next/navigation";
+import { DeleteApplicationButton } from "@/components/admin/DeleteApplicationButton";
 import { NotesForm } from "@/components/admin/NotesForm";
 import { StatusSelect } from "@/components/admin/StatusSelect";
 import { connectDb } from "@/lib/db";
@@ -94,7 +95,14 @@ export default async function ApplicationDetailPage({
             {app.profession ? ` · ${app.profession}` : ""}
           </p>
         </div>
-        <StatusSelect id={String(app._id)} status={app.status} />
+        <div className="dash-page-actions">
+          <StatusSelect id={String(app._id)} status={app.status} />
+          <DeleteApplicationButton
+            id={String(app._id)}
+            name={app.fullName}
+            redirectTo="/admin/dashboard/applications"
+          />
+        </div>
       </div>
 
       <div className="detail-grid">

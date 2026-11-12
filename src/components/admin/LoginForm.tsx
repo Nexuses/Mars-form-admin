@@ -1,11 +1,10 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { AdminBrand } from "./AdminBrand";
 
 export function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get("next") || "/admin/dashboard";
 
@@ -29,8 +28,11 @@ export function LoginForm() {
         setError(data.error || "Could not sign in.");
         return;
       }
-      router.replace(next.startsWith("/admin") ? next : "/admin/dashboard");
-      router.refresh();
+      // Full navigation after setting the auth cookie avoids flaky soft
+      // transitions in production (RSC payload + new session race).
+      const dest = next.startsWith("/admin") ? next : "/admin/dashboard";
+      window.location.assign(dest);
+      return;
     } catch {
       setError("Could not reach the server. Try again.");
     } finally {

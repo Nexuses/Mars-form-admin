@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { connection } from "next/server";
+import { DeleteApplicationButton } from "@/components/admin/DeleteApplicationButton";
 import { connectDb } from "@/lib/db";
 import { Application } from "@/models/Application";
 
@@ -97,7 +98,7 @@ export default async function ApplicationsPage({
                   <th>Location</th>
                   <th>Status</th>
                   <th>Submitted</th>
-                  <th></th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -131,12 +132,20 @@ export default async function ApplicationsPage({
                     </td>
                     <td>{formatDate(app.submittedAt)}</td>
                     <td>
-                      <Link
-                        href={`/admin/dashboard/applications/${String(app._id)}`}
-                        className="dash-link"
-                      >
-                        View
-                      </Link>
+                      <div className="dash-row-actions">
+                        <Link
+                          href={`/admin/dashboard/applications/${String(app._id)}`}
+                          className="dash-link"
+                          prefetch
+                        >
+                          View
+                        </Link>
+                        <DeleteApplicationButton
+                          id={String(app._id)}
+                          name={app.fullName}
+                          compact
+                        />
+                      </div>
                     </td>
                   </tr>
                 ))}

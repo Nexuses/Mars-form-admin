@@ -141,6 +141,7 @@ export function AdminSidebar({
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch
                 className={`dash-nav-link${active ? " active" : ""}`}
                 onClick={() => setOpen(false)}
               >
