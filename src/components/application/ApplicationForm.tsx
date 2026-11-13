@@ -11,6 +11,7 @@ import {
   type FileStore,
   type FormValues,
 } from "@/lib/application/types";
+import { uploadApplicationFiles } from "@/lib/application/upload-client";
 import { validateAll, validateStep } from "@/lib/application/validation";
 import { Hero } from "./Hero";
 import { ProgressRail } from "./ProgressRail";
@@ -195,37 +196,38 @@ export function ApplicationForm() {
       return;
     }
 
-    if (values.company_website) {
-      setSubmitted(true);
+    // Honeypot: bots that fill hidden fields never reach the API.
+    // Do not fake a success screen — that hid real autofill false-positives.
+    if (values.company_website.trim()) {
       return;
     }
-
-    const fd = new FormData();
-    Object.entries(values).forEach(([k, v]) => {
-      if (k === "company_website") return;
-      if (k === "emr") {
-        (v as string[]).forEach((item) => fd.append("emr", item));
-        return;
-      }
-      if (k === "consent") {
-        if (v) fd.append("consent", "Yes");
-        return;
-      }
-      if (typeof v === "string") fd.append(k, v);
-    });
-
-    (["checklist", "license", "lifesupport", "resume"] as const).forEach(
-      (slot) => {
-        if (slot === "checklist" && values.checklist_method !== "upload") return;
-        files[slot].forEach((f) => fd.append(slot, f, f.name));
-      },
-    );
-    fd.append("submitted_at", new Date().toISOString());
-    fd.append("page_url", window.location.origin + window.location.pathname);
 
     setSubmitting(true);
     setSubmitError("");
     try {
+      const attachments = await uploadApplicationFiles(
+        files,
+        values.checklist_method,
+      );
+
+      const fd = new FormData();
+      Object.entries(values).forEach(([k, v]) => {
+        if (k === "company_website") return;
+        if (k === "emr") {
+          (v as string[]).forEach((item) => fd.append("emr", item));
+          return;
+        }
+        if (k === "consent") {
+          if (v) fd.append("consent", "Yes");
+          return;
+        }
+        if (typeof v === "string") fd.append(k, v);
+      });
+
+      fd.append("attachments_json", JSON.stringify(attachments));
+      fd.append("submitted_at", new Date().toISOString());
+      fd.append("page_url", window.location.origin + window.location.pathname);
+
       const ctrl = new AbortController();
       const timer = setTimeout(() => ctrl.abort(), 120000);
       const res = await fetch("/api/apply", {
@@ -235,7 +237,10 @@ export function ApplicationForm() {
         headers: { Accept: "application/json" },
       });
       clearTimeout(timer);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) {
+        const data = (await res.json().catch(() => ({}))) as { error?: string };
+        throw new Error(data.error || `HTTP ${res.status}`);
+      }
       const data = (await res.json().catch(() => ({}))) as {
         reference?: string;
         id?: string;
@@ -249,9 +254,11 @@ export function ApplicationForm() {
       });
     } catch (err) {
       console.error("MARS form submit failed:", err);
-      setSubmitError(
-        "We could not send your application. Check your connection and try again. Your answers are still on this page. If it keeps happening, contact your MARS recruiter.",
-      );
+      const message =
+        err instanceof Error && err.message && !err.message.startsWith("HTTP ")
+          ? err.message
+          : "We could not send your application. Check your connection and try again. Your answers are still on this page. If it keeps happening, contact your MARS recruiter.";
+      setSubmitError(message);
     } finally {
       setSubmitting(false);
     }
@@ -327,11 +334,15 @@ export function ApplicationForm() {
                     type="text"
                     name="company_website"
                     tabIndex={-1}
-                    autoComplete="off"
+                    autoComplete="new-password"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck={false}
                     value={values.company_website}
                     onChange={(e) =>
                       onChange("company_website", e.target.value)
                     }
+                    onFocus={(e) => e.currentTarget.blur()}
                   />
                 </label>
               </div>
@@ -415,7 +426,7 @@ export function ApplicationForm() {
                   {submitting ? (
                     <>
                       <span className="spinner" />
-                      Submitting
+                      Uploading & submitting
                     </>
                   ) : step === LAST ? (
                     "Submit application"

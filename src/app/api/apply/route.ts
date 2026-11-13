@@ -9,15 +9,26 @@ import {
   createMailTransport,
   rowsToHtml,
 } from "@/lib/mail";
+import { isOurApplicationAttachmentUrl } from "@/lib/s3";
 import { saveApplicationFile } from "@/lib/uploads";
 import { Application } from "@/models/Application";
 
-type Attachment = {
+type AttachmentMeta = {
   slot: "checklist" | "license" | "lifesupport" | "resume";
+  originalName: string;
+  url: string;
+  contentType: string;
+  size: number;
+};
+
+type LegacyAttachment = {
+  slot: AttachmentMeta["slot"];
   filename: string;
   content: Buffer;
   contentType?: string;
 };
+
+const SLOTS = new Set(["checklist", "license", "lifesupport", "resume"]);
 
 function getAll(form: FormData, key: string): string[] {
   return form
@@ -31,11 +42,11 @@ function getStr(form: FormData, key: string): string {
   return typeof v === "string" ? v.trim() : "";
 }
 
-async function collectFiles(
+async function collectLegacyFiles(
   form: FormData,
-  slot: Attachment["slot"],
-): Promise<Attachment[]> {
-  const out: Attachment[] = [];
+  slot: AttachmentMeta["slot"],
+): Promise<LegacyAttachment[]> {
+  const out: LegacyAttachment[] = [];
   for (const item of form.getAll(slot)) {
     if (!(item instanceof File) || item.size === 0) continue;
     const buf = Buffer.from(await item.arrayBuffer());
@@ -44,6 +55,49 @@ async function collectFiles(
       filename: item.name || `${slot}-${out.length + 1}`,
       content: buf,
       contentType: item.type || undefined,
+    });
+  }
+  return out;
+}
+
+function parseUploadedAttachments(raw: string): AttachmentMeta[] {
+  if (!raw) return [];
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    throw new Error("Invalid attachments payload.");
+  }
+  if (!Array.isArray(parsed)) throw new Error("Invalid attachments payload.");
+
+  const out: AttachmentMeta[] = [];
+  for (const item of parsed) {
+    if (!item || typeof item !== "object") continue;
+    const row = item as Record<string, unknown>;
+    const slot = typeof row.slot === "string" ? row.slot : "";
+    const originalName =
+      typeof row.originalName === "string" ? row.originalName.trim() : "";
+    const url = typeof row.url === "string" ? row.url.trim() : "";
+    const contentType =
+      typeof row.contentType === "string" ? row.contentType : "";
+    const size = typeof row.size === "number" ? row.size : 0;
+
+    if (!SLOTS.has(slot) || !originalName || !url) {
+      throw new Error("Invalid attachment entry.");
+    }
+    if (!isOurApplicationAttachmentUrl(url)) {
+      throw new Error("Attachment URL is not allowed.");
+    }
+    if (size < 0 || size > FORM_CONFIG.maxFileMB * 1024 * 1024) {
+      throw new Error("Attachment size is invalid.");
+    }
+
+    out.push({
+      slot: slot as AttachmentMeta["slot"],
+      originalName: originalName.slice(0, 180),
+      url,
+      contentType: contentType.slice(0, 120),
+      size,
     });
   }
   return out;
@@ -65,6 +119,7 @@ export async function POST(request: Request) {
     await connection();
     const form = await request.formData();
 
+    // Honeypot — pretend success so bots do not retry.
     if (getStr(form, "company_website")) {
       return NextResponse.json({ ok: true, reference: refId() });
     }
@@ -74,6 +129,21 @@ export async function POST(request: Request) {
     if (!fullName || !email) {
       return NextResponse.json(
         { error: "Missing required fields." },
+        { status: 400 },
+      );
+    }
+
+    let uploadedAttachments: AttachmentMeta[] = [];
+    try {
+      uploadedAttachments = parseUploadedAttachments(
+        getStr(form, "attachments_json"),
+      );
+    } catch (err) {
+      return NextResponse.json(
+        {
+          error:
+            err instanceof Error ? err.message : "Invalid attachments payload.",
+        },
         { status: 400 },
       );
     }
@@ -104,10 +174,13 @@ export async function POST(request: Request) {
       ? new Date(submittedAtRaw)
       : new Date();
 
-    const fileBags: Attachment[] = [];
-    for (const slot of ["checklist", "license", "lifesupport", "resume"] as const) {
-      if (slot === "checklist" && checklistMethod !== "upload") continue;
-      fileBags.push(...(await collectFiles(form, slot)));
+    // Legacy multipart fallback (local/dev or older clients). Prefer S3 URLs.
+    const legacyBags: LegacyAttachment[] = [];
+    if (!uploadedAttachments.length) {
+      for (const slot of ["checklist", "license", "lifesupport", "resume"] as const) {
+        if (slot === "checklist" && checklistMethod !== "upload") continue;
+        legacyBags.push(...(await collectLegacyFiles(form, slot)));
+      }
     }
 
     await connectDb();
@@ -168,32 +241,39 @@ export async function POST(request: Request) {
       consent: getStr(form, "consent"),
       signature: getStr(form, "signature"),
       signatureDate: getStr(form, "signature_date"),
-      attachments: [],
+      attachments: uploadedAttachments,
     });
 
-    const savedAttachments = [];
-    for (const file of fileBags) {
-      const saved = await saveApplicationFile({
-        applicationId: application._id.toString(),
-        slot: file.slot,
-        originalName: file.filename,
-        content: file.content,
-        contentType: file.contentType,
-      });
-      savedAttachments.push({
-        slot: file.slot,
-        originalName: file.filename,
-        url: saved.url,
-        contentType: file.contentType || "",
-        size: file.content.length,
-      });
-    }
-
-    if (savedAttachments.length) {
+    if (legacyBags.length) {
+      const savedAttachments = [];
+      for (const file of legacyBags) {
+        const saved = await saveApplicationFile({
+          applicationId: application._id.toString(),
+          slot: file.slot,
+          originalName: file.filename,
+          content: file.content,
+          contentType: file.contentType,
+        });
+        savedAttachments.push({
+          slot: file.slot,
+          originalName: file.filename,
+          url: saved.url,
+          contentType: file.contentType || "",
+          size: file.content.length,
+        });
+      }
       await Application.findByIdAndUpdate(application._id, {
         $set: { attachments: savedAttachments },
       });
+      uploadedAttachments = savedAttachments;
     }
+
+    const attachmentNames =
+      uploadedAttachments.map((a) => a.originalName).join(", ") || "None";
+    const attachmentLinks =
+      uploadedAttachments
+        .map((a) => `${a.slot}: ${a.originalName} — ${a.url}`)
+        .join("\n") || "None";
 
     const sections = [
       rowsToHtml("Your details", [
@@ -336,10 +416,11 @@ export async function POST(request: Request) {
         { label: "Page URL", value: getStr(form, "page_url") },
         { label: "Client", value: client },
         { label: "Form version", value: getStr(form, "form_version") },
-        {
-          label: "Attachments",
-          value: fileBags.map((a) => a.filename).join(", ") || "None",
-        },
+        { label: "Attachments", value: attachmentNames },
+        ...uploadedAttachments.map((a) => ({
+          label: `File (${a.slot})`,
+          value: a.url,
+        })),
       ]),
     ]
       .filter(Boolean)
@@ -360,7 +441,8 @@ export async function POST(request: Request) {
       `Email: ${email}`,
       `Phone: ${getStr(form, "phone")}`,
       client ? `Client: ${client}` : "",
-      `Attachments: ${fileBags.map((a) => a.filename).join(", ") || "None"}`,
+      `Attachments:`,
+      attachmentLinks,
     ].filter(Boolean);
 
     const from = process.env.FROM_EMAIL || "noreply@example.com";
@@ -379,11 +461,6 @@ export async function POST(request: Request) {
             subject: `MARS application — ${fullName}${client ? ` (${client})` : ""} [${reference}]`,
             text: textLines.join("\n"),
             html,
-            attachments: fileBags.map((a) => ({
-              filename: `${a.slot}-${a.filename}`,
-              content: a.content,
-              contentType: a.contentType,
-            })),
           });
         } catch (mailErr) {
           console.error("apply admin email failed (application still saved):", mailErr);

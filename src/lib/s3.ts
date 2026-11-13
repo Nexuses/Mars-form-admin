@@ -110,3 +110,48 @@ export async function deleteObjectFromS3(key: string): Promise<void> {
     }),
   );
 }
+
+/** Browser-direct upload URL so large files never pass through the app server. */
+export async function createPresignedPutUrl(opts: {
+  key: string;
+  contentType: string;
+  expiresIn?: number;
+}): Promise<{ uploadUrl: string; publicUrl: string; key: string }> {
+  const command = new PutObjectCommand({
+    Bucket: getS3Bucket(),
+    Key: opts.key,
+    ContentType: opts.contentType || "application/octet-stream",
+  });
+  const uploadUrl = await getSignedUrl(getS3Client(), command, {
+    expiresIn: opts.expiresIn ?? 60 * 15,
+  });
+  return {
+    uploadUrl,
+    publicUrl: publicObjectUrl(opts.key),
+    key: opts.key,
+  };
+}
+
+export function isAllowedApplicationUploadKey(key: string): boolean {
+  return key.startsWith("applications/");
+}
+
+/** True when a public URL points at an applications/* object in this bucket. */
+export function isOurApplicationAttachmentUrl(url: string): boolean {
+  const key = s3KeyFromUrl(url);
+  if (!key || !isAllowedApplicationUploadKey(key)) return false;
+  try {
+    const u = new URL(url);
+    const bucket = getS3Bucket();
+    const host = u.hostname;
+    return (
+      host === `${bucket}.s3.${getS3Region()}.amazonaws.com` ||
+      host.startsWith(`${bucket}.s3.`) ||
+      host.startsWith(`${bucket}.s3-`) ||
+      ((host.startsWith("s3.") || host.startsWith("s3-")) &&
+        u.pathname.replace(/^\/+/, "").startsWith(`${bucket}/`))
+    );
+  } catch {
+    return false;
+  }
+}
