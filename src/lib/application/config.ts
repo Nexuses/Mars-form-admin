@@ -23,7 +23,8 @@ export const FORM_CONFIG = {
   clientName: "Advocate Aurora Health",
   checklists: CHECKLISTS,
   checklistPagesPath: "/checklists/",
-  maxFileMB: 10,
+  /** Per-file cap. Files go straight to S3; MongoDB only stores the S3 URL. */
+  maxFileMB: 50,
   maxFilesPerSlot: 5,
   formVersion: "1.0",
 };

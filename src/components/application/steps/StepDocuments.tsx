@@ -203,7 +203,8 @@ export function StepDocuments({
       <div className="group">
         <h3>Credentials</h3>
         <p className="hint" style={{ marginBottom: 16 }}>
-          PDF, JPG, PNG or HEIC, up to 10 MB per file. Make sure names, numbers
+          PDF, JPG, PNG or HEIC, up to {FORM_CONFIG.maxFileMB} MB per file.
+          Files are stored securely in cloud storage. Make sure names, numbers
           and expiry dates are readable.
         </p>
         <div className="stack">

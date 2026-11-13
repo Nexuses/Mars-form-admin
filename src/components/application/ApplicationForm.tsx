@@ -229,7 +229,8 @@ export function ApplicationForm() {
       fd.append("page_url", window.location.origin + window.location.pathname);
 
       const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 120000);
+      // Large S3 uploads (up to 50 MB each) need a longer client timeout.
+      const timer = setTimeout(() => ctrl.abort(), 300000);
       const res = await fetch("/api/apply", {
         method: "POST",
         body: fd,

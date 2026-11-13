@@ -10,7 +10,6 @@ import {
   rowsToHtml,
 } from "@/lib/mail";
 import { isOurApplicationAttachmentUrl } from "@/lib/s3";
-import { saveApplicationFile } from "@/lib/uploads";
 import { Application } from "@/models/Application";
 
 type AttachmentMeta = {
@@ -19,13 +18,6 @@ type AttachmentMeta = {
   url: string;
   contentType: string;
   size: number;
-};
-
-type LegacyAttachment = {
-  slot: AttachmentMeta["slot"];
-  filename: string;
-  content: Buffer;
-  contentType?: string;
 };
 
 const SLOTS = new Set(["checklist", "license", "lifesupport", "resume"]);
@@ -40,24 +32,6 @@ function getAll(form: FormData, key: string): string[] {
 function getStr(form: FormData, key: string): string {
   const v = form.get(key);
   return typeof v === "string" ? v.trim() : "";
-}
-
-async function collectLegacyFiles(
-  form: FormData,
-  slot: AttachmentMeta["slot"],
-): Promise<LegacyAttachment[]> {
-  const out: LegacyAttachment[] = [];
-  for (const item of form.getAll(slot)) {
-    if (!(item instanceof File) || item.size === 0) continue;
-    const buf = Buffer.from(await item.arrayBuffer());
-    out.push({
-      slot,
-      filename: item.name || `${slot}-${out.length + 1}`,
-      content: buf,
-      contentType: item.type || undefined,
-    });
-  }
-  return out;
 }
 
 function parseUploadedAttachments(raw: string): AttachmentMeta[] {
@@ -174,15 +148,7 @@ export async function POST(request: Request) {
       ? new Date(submittedAtRaw)
       : new Date();
 
-    // Legacy multipart fallback (local/dev or older clients). Prefer S3 URLs.
-    const legacyBags: LegacyAttachment[] = [];
-    if (!uploadedAttachments.length) {
-      for (const slot of ["checklist", "license", "lifesupport", "resume"] as const) {
-        if (slot === "checklist" && checklistMethod !== "upload") continue;
-        legacyBags.push(...(await collectLegacyFiles(form, slot)));
-      }
-    }
-
+    // Files are already on S3. MongoDB only stores metadata + public S3 URLs.
     await connectDb();
 
     const application = await Application.create({
@@ -243,30 +209,6 @@ export async function POST(request: Request) {
       signatureDate: getStr(form, "signature_date"),
       attachments: uploadedAttachments,
     });
-
-    if (legacyBags.length) {
-      const savedAttachments = [];
-      for (const file of legacyBags) {
-        const saved = await saveApplicationFile({
-          applicationId: application._id.toString(),
-          slot: file.slot,
-          originalName: file.filename,
-          content: file.content,
-          contentType: file.contentType,
-        });
-        savedAttachments.push({
-          slot: file.slot,
-          originalName: file.filename,
-          url: saved.url,
-          contentType: file.contentType || "",
-          size: file.content.length,
-        });
-      }
-      await Application.findByIdAndUpdate(application._id, {
-        $set: { attachments: savedAttachments },
-      });
-      uploadedAttachments = savedAttachments;
-    }
 
     const attachmentNames =
       uploadedAttachments.map((a) => a.originalName).join(", ") || "None";

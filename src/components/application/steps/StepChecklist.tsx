@@ -171,7 +171,7 @@ export function StepChecklist({
               <FileDrop
                 id="file-checklist"
                 label="Completed skills checklist"
-                hint="or drop it here. PDF, JPG, PNG or HEIC, up to 10 MB."
+                hint={`or drop it here. PDF, JPG, PNG or HEIC, up to ${FORM_CONFIG.maxFileMB} MB.`}
                 accept=".pdf,.jpg,.jpeg,.png,.heic,application/pdf,image/*"
                 files={files.checklist}
                 error={errors.checklist}

@@ -678,7 +678,7 @@ input::placeholder, textarea::placeholder { color: #8A89A6; }
               <div class="drop">
                 <input type="file" id="file-checklist" accept=".pdf,.jpg,.jpeg,.png,.heic,application/pdf,image/*" aria-labelledby="lbl-checklist">
                 <label class="drop-btn" for="file-checklist">Choose file</label>
-                <span class="drop-hint">or drop it here. PDF, JPG, PNG or HEIC, up to 10 MB.</span>
+                <span class="drop-hint">or drop it here. PDF, JPG, PNG or HEIC, up to 50 MB.</span>
               </div>
               <ul class="filelist" aria-live="polite"></ul>
             </div>
@@ -718,7 +718,7 @@ input::placeholder, textarea::placeholder { color: #8A89A6; }
 
         <div class="group">
           <h3>Credentials</h3>
-          <p class="hint" style="margin-bottom:16px">PDF, JPG, PNG or HEIC, up to 10 MB per file. Make sure names, numbers and expiry dates are readable.</p>
+          <p class="hint" style="margin-bottom:16px">PDF, JPG, PNG or HEIC, up to 50 MB per file. Files are stored securely in cloud storage. Make sure names, numbers and expiry dates are readable.</p>
           <div class="stack">
             <div class="field" data-required="1" data-slot="license" data-multiple="1">
               <label id="lbl-license">Professional license and certificates</label>
@@ -940,7 +940,7 @@ input::placeholder, textarea::placeholder { color: #8A89A6; }
       { group: 'Patient care and support', label: 'PCT', url: 'https://www.rehabilitycare.com/checklists/PCT.html' }
     ],
 
-    maxFileMB: 10,
+    maxFileMB: 50,
     maxFilesPerSlot: 5
   };
 
