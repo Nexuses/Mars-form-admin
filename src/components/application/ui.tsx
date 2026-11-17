@@ -17,6 +17,25 @@ export function ReqMark() {
   );
 }
 
+export function ErrorText({ id, error }: { id?: string; error: string }) {
+  const tipAt = error.indexOf(" Tip: ");
+  if (tipAt === -1) {
+    return (
+      <p className="err" id={id} aria-live="polite">
+        {error}
+      </p>
+    );
+  }
+  const main = error.slice(0, tipAt).replace(/\.\s*$/, "");
+  const tip = error.slice(tipAt + 1);
+  return (
+    <p className="err" id={id} aria-live="polite">
+      <span>{main}.</span>{" "}
+      <span className="err-tip">{tip}</span>
+    </p>
+  );
+}
+
 export function FieldWrap({
   error,
   className = "",
@@ -30,11 +49,7 @@ export function FieldWrap({
   return (
     <div className={`field${error ? " invalid" : ""}${className ? ` ${className}` : ""}`}>
       {children}
-      {error ? (
-        <p className="err" id={errId} aria-live="polite">
-          {error}
-        </p>
-      ) : null}
+      {error ? <ErrorText id={errId} error={error} /> : null}
     </div>
   );
 }
@@ -76,11 +91,7 @@ export function YesNoField({
           </label>
         ))}
       </div>
-      {error ? (
-        <p className="err" aria-live="polite">
-          {error}
-        </p>
-      ) : null}
+      {error ? <ErrorText error={error} /> : null}
     </fieldset>
   );
 }

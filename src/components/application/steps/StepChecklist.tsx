@@ -8,7 +8,7 @@ import {
 } from "@/lib/application/config";
 import type { FieldErrors, FileStore, FormValues } from "@/lib/application/types";
 import { ChecklistViewer } from "../ChecklistViewer";
-import { FieldWrap, FileDrop, ReqMark } from "../ui";
+import { ErrorText, FieldWrap, FileDrop, ReqMark } from "../ui";
 
 export function StepChecklist({
   values,
@@ -160,9 +160,7 @@ export function StepChecklist({
               </label>
             </div>
             {errors.checklist_method ? (
-              <p className="err" aria-live="polite">
-                {errors.checklist_method}
-              </p>
+              <ErrorText error={errors.checklist_method} />
             ) : null}
           </fieldset>
 

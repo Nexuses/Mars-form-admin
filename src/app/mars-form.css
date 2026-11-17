@@ -157,7 +157,8 @@ input:focus, select:focus, textarea:focus {
 input[readonly] { background: var(--bg); color: var(--muted); }
 input::placeholder, textarea::placeholder { color: #8A89A6; }
 .field.invalid input, .field.invalid select, .field.invalid textarea { border-color: var(--err); }
-.err { margin: 6px 0 0; font-size: 14px; color: var(--err); font-weight: 500; }
+.err { margin: 6px 0 0; font-size: 14px; color: var(--err); font-weight: 500; line-height: 1.45; }
+.err-tip { display: inline; color: #a33a40; font-weight: 500; }
 
 .with-toggle { position: relative; }
 .with-toggle input { padding-right: 76px; }

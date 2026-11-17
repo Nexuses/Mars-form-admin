@@ -35,6 +35,57 @@ type Rule = {
   label?: string;
 };
 
+const LABELS: Record<string, string> = {
+  full_name: "full legal name",
+  address_line1: "street address",
+  city: "city",
+  state: "state",
+  zip: "ZIP code",
+  phone: "phone number",
+  phone_alt: "alternate phone",
+  email: "email address",
+  email_alt: "alternate email",
+  dob: "date of birth",
+  ssn_last4: "last 4 digits of SSN",
+  work_auth: "work authorization",
+  vehicle: "vehicle",
+  background_ok: "background check answer",
+  flu_shot: "flu shot answer",
+  start_asap: "start date preference",
+  start_date: "earliest start date",
+  days_off: "days-off answer",
+  days_off_details: "days-off details",
+  other_offers: "other offers answer",
+  other_offers_details: "other offers details",
+  interview_availability: "interview availability",
+  profession: "profession",
+  education_level: "education level",
+  education_field: "field of study",
+  education_school: "school name",
+  education_year: "graduation year",
+  edu_docs: "education documents answer",
+  emr: "EMR / EHR systems",
+  emr_other: "other EMR system",
+  prior_client: "prior client answer",
+  prior_client_details: "prior client details",
+  checklist_specialty: "skills checklist",
+  checklist_method: "checklist completion method",
+  checklist: "skills checklist file",
+  ref1_client: "reference 1 facility",
+  ref1_name: "reference 1 name",
+  ref1_title: "reference 1 title",
+  ref1_contact: "reference 1 contact",
+  ref2_client: "reference 2 facility",
+  ref2_name: "reference 2 name",
+  ref2_title: "reference 2 title",
+  ref2_contact: "reference 2 contact",
+  license: "license / certificates",
+  lifesupport: "life support certification",
+  resume: "resume",
+  consent: "consent",
+  signature: "signature",
+};
+
 const RULES: Rule[] = [
   { key: "full_name", step: 0, required: true },
   { key: "address_line1", step: 0, required: true },
@@ -146,6 +197,40 @@ const RULES: Rule[] = [
   { key: "signature", step: 5, required: true },
 ];
 
+function labelFor(key: string): string {
+  return LABELS[key] || "this field";
+}
+
+function requiredMessage(rule: Rule): string {
+  const label = labelFor(rule.key);
+  if (rule.type === "select" || rule.type === "radio" || rule.type === "emr") {
+    return `Please choose your ${label}. Tip: pick one of the options shown.`;
+  }
+  if (rule.type === "file") {
+    return `Please upload your ${label}. Tip: PDF, JPG, PNG, or HEIC up to ${FORM_CONFIG.maxFileMB} MB.`;
+  }
+  if (rule.type === "consent") {
+    return "Please tick the consent box to continue. Tip: you must agree before submitting.";
+  }
+  return `Please enter your ${label}. Tip: this field is required to continue.`;
+}
+
+function fieldHasValue(
+  rule: Rule,
+  values: FormValues,
+  files: FileStore,
+): boolean {
+  if (rule.type === "file" && rule.slot) {
+    return (files[rule.slot]?.length ?? 0) > 0;
+  }
+  if (rule.type === "emr") return values.emr.length > 0;
+  if (rule.type === "consent") return !!values.consent;
+  const raw = (values as Record<string, unknown>)[rule.key];
+  if (typeof raw === "boolean") return raw;
+  if (typeof raw === "string") return raw.trim().length > 0;
+  return raw != null && raw !== "";
+}
+
 function validateValue(
   rule: Rule,
   values: FormValues,
@@ -164,24 +249,20 @@ function validateValue(
 
   if (rule.type === "file" && rule.slot) {
     const n = files[rule.slot]?.length ?? 0;
-    return required && !n ? "Upload at least one file." : "";
+    return required && !n ? requiredMessage(rule) : "";
   }
 
   if (rule.type === "emr") {
-    return required && values.emr.length === 0
-      ? "Select at least one option."
-      : "";
+    return required && values.emr.length === 0 ? requiredMessage(rule) : "";
   }
 
   if (rule.type === "consent") {
-    return required && !values.consent
-      ? "Please tick this box to continue."
-      : "";
+    return required && !values.consent ? requiredMessage(rule) : "";
   }
 
   if (rule.type === "radio") {
     const v = (values as Record<string, unknown>)[rule.key];
-    return required && !v ? "Choose an option." : "";
+    return required && !v ? requiredMessage(rule) : "";
   }
 
   const raw = (values as Record<string, unknown>)[rule.key];
@@ -189,54 +270,71 @@ function validateValue(
 
   if (!v) {
     if (!required) return "";
-    return rule.type === "select" ? "Choose an option." : "This field is required.";
+    return requiredMessage(rule);
   }
 
   switch (rule.type) {
     case "email":
-      if (!RX_EMAIL.test(v))
-        return "Enter a valid email address, like name@example.com.";
+      if (!RX_EMAIL.test(v)) {
+        return "That email doesn’t look right. Tip: use a format like name@example.com.";
+      }
       break;
     case "phone": {
       let d = digits(v);
       if (d.length === 11 && d.charAt(0) === "1") d = d.slice(1);
-      if (d.length !== 10) return "Enter a 10-digit US phone number.";
+      if (d.length !== 10) {
+        return "That phone number doesn’t look right. Tip: enter a 10-digit US number, like (312) 555-0199.";
+      }
       break;
     }
     case "zip":
-      if (!/^\d{5}(-\d{4})?$/.test(v)) return "Enter a 5-digit ZIP code.";
+      if (!/^\d{5}(-\d{4})?$/.test(v)) {
+        return "That ZIP code doesn’t look right. Tip: use 5 digits (60601) or ZIP+4 (60601-1234).";
+      }
       break;
     case "ssn4":
-      if (!/^\d{4}$/.test(v)) return "Enter exactly 4 digits.";
+      if (!/^\d{4}$/.test(v)) {
+        return "That SSN entry doesn’t look right. Tip: enter only the last 4 digits, like 1234.";
+      }
       break;
     case "dob": {
       const dt = new Date(`${v}T00:00:00`);
-      if (Number.isNaN(dt.getTime())) return "Enter a valid date of birth.";
+      if (Number.isNaN(dt.getTime())) {
+        return "That date of birth doesn’t look right. Tip: pick a valid date from the calendar.";
+      }
       const now = new Date();
       let age = now.getFullYear() - dt.getFullYear();
       const m = now.getMonth() - dt.getMonth();
       if (m < 0 || (m === 0 && now.getDate() < dt.getDate())) age--;
-      if (age < 18) return "You must be at least 18 years old.";
-      if (age > 100) return "Check the year of birth.";
+      if (age < 18) {
+        return "You must be at least 18 years old. Tip: check the year — applicants under 18 can’t continue.";
+      }
+      if (age > 100) {
+        return "That year of birth looks unlikely. Tip: double-check the year and try again.";
+      }
       break;
     }
     case "futuredate": {
       const sd = new Date(`${v}T00:00:00`);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      if (Number.isNaN(sd.getTime()) || sd < today)
-        return "Choose today or a future date.";
+      if (Number.isNaN(sd.getTime()) || sd < today) {
+        return "That start date isn’t available. Tip: choose today or a future date.";
+      }
       break;
     }
     case "year": {
       const y = parseInt(v, 10);
-      if (Number.isNaN(y) || y < 1950 || y > new Date().getFullYear() + 6)
-        return "Enter a valid 4-digit year.";
+      const maxYear = new Date().getFullYear() + 6;
+      if (Number.isNaN(y) || y < 1950 || y > maxYear) {
+        return `That year doesn’t look right. Tip: enter a 4-digit year between 1950 and ${maxYear}.`;
+      }
       break;
     }
     case "contact":
-      if (!RX_EMAIL.test(v) && digits(v).length < 10)
-        return "Enter a phone number or email address.";
+      if (!RX_EMAIL.test(v) && digits(v).length < 10) {
+        return "That contact doesn’t look right. Tip: enter a phone like (312) 555-0199 or an email like name@example.com.";
+      }
       break;
   }
   return "";
@@ -252,6 +350,32 @@ export function validateStep(
     if (rule.step !== step) continue;
     const msg = validateValue(rule, values, files);
     if (msg) errors[rule.key] = msg;
+  }
+  return errors;
+}
+
+/**
+ * Live errors for the current step:
+ * - Always show when a field is filled but wrong (format / value issues)
+ * - Show missing required fields only after the field was touched
+ */
+export function getLiveStepErrors(
+  step: number,
+  values: FormValues,
+  files: FileStore,
+  touched: Record<string, boolean>,
+): FieldErrors {
+  const errors: FieldErrors = {};
+  for (const rule of RULES) {
+    if (rule.step !== step) continue;
+    if (rule.when && !isVisible(rule.when, values)) continue;
+    const msg = validateValue(rule, values, files);
+    if (!msg) continue;
+
+    const filled = fieldHasValue(rule, values, files);
+    if (filled || touched[rule.key]) {
+      errors[rule.key] = msg;
+    }
   }
   return errors;
 }
@@ -279,9 +403,15 @@ export function validateAll(
 export function validateFile(file: File): string | null {
   const ext = (file.name.split(".").pop() || "").toLowerCase();
   const allowed = ["pdf", "jpg", "jpeg", "png", "heic", "doc", "docx"];
-  if (!allowed.includes(ext)) return `${file.name}: unsupported file type.`;
+  if (!allowed.includes(ext)) {
+    return `${file.name}: unsupported file type. Tip: use PDF, JPG, PNG, HEIC, DOC, or DOCX.`;
+  }
   const max = FORM_CONFIG.maxFileMB * 1024 * 1024;
-  if (file.size > max) return `${file.name} is over ${FORM_CONFIG.maxFileMB} MB.`;
-  if (file.size === 0) return `${file.name} is empty.`;
+  if (file.size > max) {
+    return `${file.name} is over ${FORM_CONFIG.maxFileMB} MB. Tip: compress the file or upload a clearer smaller scan.`;
+  }
+  if (file.size === 0) {
+    return `${file.name} is empty. Tip: choose a different file and try again.`;
+  }
   return null;
 }

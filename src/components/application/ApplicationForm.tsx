@@ -13,6 +13,7 @@ import {
 } from "@/lib/application/types";
 import { uploadApplicationFiles } from "@/lib/application/upload-client";
 import {
+  getLiveStepErrors,
   isStepComplete,
   validateAll,
   validateStep,
@@ -40,6 +41,8 @@ export function ApplicationForm() {
   }));
   const [files, setFiles] = useState<FileStore>(EMPTY_FILES);
   const [errors, setErrors] = useState<FieldErrors>({});
+  const [fileErrors, setFileErrors] = useState<FieldErrors>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [step, setStep] = useState(0);
   const [stepAlert, setStepAlert] = useState("");
   const [submitError, setSubmitError] = useState("");
@@ -78,18 +81,14 @@ export function ApplicationForm() {
 
   function onChange<K extends keyof FormValues>(key: K, value: FormValues[K]) {
     markDirty();
+    setTouched((prev) => ({ ...prev, [key as string]: true }));
     setValues((prev) => ({ ...prev, [key]: value }));
-    setErrors((prev) => {
-      if (!prev[key as string]) return prev;
-      const next = { ...prev };
-      delete next[key as string];
-      return next;
-    });
     setStepAlert("");
   }
 
   function onEmrToggle(value: string, checked: boolean) {
     markDirty();
+    setTouched((prev) => ({ ...prev, emr: true }));
     setValues((prev) => {
       let emr = [...prev.emr];
       if (checked) {
@@ -100,13 +99,6 @@ export function ApplicationForm() {
       }
       return { ...prev, emr };
     });
-    setErrors((prev) => {
-      if (!prev.emr && !prev.emr_other) return prev;
-      const next = { ...prev };
-      delete next.emr;
-      delete next.emr_other;
-      return next;
-    });
   }
 
   function onFiles(
@@ -115,14 +107,22 @@ export function ApplicationForm() {
     message?: string,
   ) {
     markDirty();
+    setTouched((prev) => ({ ...prev, [slot]: true }));
     setFiles((prev) => ({ ...prev, [slot]: next }));
-    setErrors((prev) => {
+    // Show reject tips only while the pick failed; clear as soon as a valid file lands.
+    setFileErrors((prev) => {
       const copy = { ...prev };
       if (message) copy[slot] = message;
       else delete copy[slot];
       return copy;
     });
   }
+
+  useEffect(() => {
+    setErrors(getLiveStepErrors(step, values, files, touched));
+  }, [step, values, files, touched]);
+
+  const displayErrors: FieldErrors = { ...errors, ...fileErrors };
 
   function go(i: number, focus = true) {
     setStep(i);
@@ -141,15 +141,21 @@ export function ApplicationForm() {
 
   function runValidate(i: number): boolean {
     const errs = validateStep(i, values, files);
+    const allTouched = { ...touched };
+    Object.keys(errs).forEach((key) => {
+      allTouched[key] = true;
+    });
+    setTouched(allTouched);
     setErrors(errs);
     const count = Object.keys(errs).length;
     if (count) {
+      const firstKey = Object.keys(errs)[0];
+      const firstMsg = errs[firstKey];
       setStepAlert(
         count === 1
-          ? "One answer needs your attention before you continue."
-          : `${count} answers need your attention before you continue.`,
+          ? firstMsg
+          : `${count} answers need fixing before you continue. ${firstMsg}`,
       );
-      const firstKey = Object.keys(errs)[0];
       requestAnimationFrame(() => {
         const el = document.querySelector<HTMLElement>(
           `[name="${firstKey}"], #${firstKey}, #file-${firstKey}`,
@@ -357,21 +363,21 @@ export function ApplicationForm() {
               {step === 0 ? (
                 <StepDetails
                   values={values}
-                  errors={errors}
+                  errors={displayErrors}
                   onChange={onChange}
                 />
               ) : null}
               {step === 1 ? (
                 <StepEligibility
                   values={values}
-                  errors={errors}
+                  errors={displayErrors}
                   onChange={onChange}
                 />
               ) : null}
               {step === 2 ? (
                 <StepExperience
                   values={values}
-                  errors={errors}
+                  errors={displayErrors}
                   onChange={onChange}
                   onEmrToggle={onEmrToggle}
                 />
@@ -379,7 +385,7 @@ export function ApplicationForm() {
               {step === 3 ? (
                 <StepChecklist
                   values={values}
-                  errors={errors}
+                  errors={displayErrors}
                   files={files}
                   onChange={onChange}
                   onFiles={onFiles}
@@ -388,14 +394,14 @@ export function ApplicationForm() {
               {step === 4 ? (
                 <StepReferences
                   values={values}
-                  errors={errors}
+                  errors={displayErrors}
                   onChange={onChange}
                 />
               ) : null}
               {step === 5 ? (
                 <StepDocuments
                   values={values}
-                  errors={errors}
+                  errors={displayErrors}
                   files={files}
                   submitError={submitError}
                   onChange={onChange}
