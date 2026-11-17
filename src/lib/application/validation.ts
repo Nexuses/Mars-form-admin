@@ -256,6 +256,15 @@ export function validateStep(
   return errors;
 }
 
+/** True when every required field on this step is filled and valid. */
+export function isStepComplete(
+  step: number,
+  values: FormValues,
+  files: FileStore,
+): boolean {
+  return Object.keys(validateStep(step, values, files)).length === 0;
+}
+
 export function validateAll(
   values: FormValues,
   files: FileStore,

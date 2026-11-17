@@ -259,14 +259,33 @@ input::placeholder, textarea::placeholder { color: #8A89A6; }
   font-size: 16px; text-decoration: none; cursor: pointer; border: 1.5px solid transparent;
 }
 .btn-primary { background: var(--crimson); color: #fff; }
-.btn-primary:hover { background: var(--crimson-dark); }
+.btn-primary:hover:not(:disabled) { background: var(--crimson-dark); }
 .btn-ghost { background: #fff; color: var(--navy); border-color: var(--navy); }
-.btn-ghost:hover { background: var(--lilac); }
+.btn-ghost:hover:not(:disabled) { background: var(--lilac); }
 .btn:focus-visible, .rail-btn:focus-visible, .link-btn:focus-visible,
 .toggle-btn:focus-visible, .file-remove:focus-visible {
   outline: 3px solid rgba(37, 36, 94, 0.5); outline-offset: 2px;
 }
-.btn[disabled] { opacity: 0.65; cursor: progress; }
+.btn:disabled,
+.btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.btn-primary:disabled,
+.btn-primary[disabled] {
+  background: #b7b6c7;
+  color: #fff;
+}
+.btn-primary:disabled .spinner,
+.btn-primary[disabled] .spinner {
+  opacity: 1;
+}
+.btn-primary[disabled]:has(.spinner) {
+  opacity: 0.85;
+  cursor: progress;
+  background: var(--crimson);
+}
 .spinner {
   width: 18px; height: 18px; border-radius: 50%; border: 2.5px solid rgba(255, 255, 255, 0.4);
   border-top-color: #fff; animation: spin 0.8s linear infinite;

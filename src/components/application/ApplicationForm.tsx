@@ -12,7 +12,11 @@ import {
   type FormValues,
 } from "@/lib/application/types";
 import { uploadApplicationFiles } from "@/lib/application/upload-client";
-import { validateAll, validateStep } from "@/lib/application/validation";
+import {
+  isStepComplete,
+  validateAll,
+  validateStep,
+} from "@/lib/application/validation";
 import { Hero } from "./Hero";
 import { ProgressRail } from "./ProgressRail";
 import { SiteFooter } from "./SiteFooter";
@@ -275,6 +279,8 @@ export function ApplicationForm() {
   }
 
   const firstName = values.full_name.trim().split(/\s+/)[0];
+  const stepReady = isStepComplete(step, values, files);
+  const primaryDisabled = submitting || !stepReady;
 
   return (
     <>
@@ -422,7 +428,13 @@ export function ApplicationForm() {
                   className="btn btn-primary"
                   id="btn-next"
                   style={{ marginLeft: "auto" }}
-                  disabled={submitting}
+                  disabled={primaryDisabled}
+                  aria-disabled={primaryDisabled}
+                  title={
+                    stepReady
+                      ? undefined
+                      : "Fill all required fields on this step to continue"
+                  }
                 >
                   {submitting ? (
                     <>
