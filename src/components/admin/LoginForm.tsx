@@ -54,13 +54,14 @@ export function LoginForm() {
         <form onSubmit={onSubmit} noValidate>
           <div className="admin-stack">
             <div className="admin-field">
-              <label htmlFor="admin-email">Email</label>
+              <label htmlFor="admin-email">Username</label>
               <input
                 id="admin-email"
                 name="email"
                 type="email"
                 autoComplete="username"
                 required
+                placeholder="you@marssg.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />

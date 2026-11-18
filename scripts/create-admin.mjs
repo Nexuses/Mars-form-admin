@@ -1,6 +1,9 @@
 /**
- * Create an admin account (signup UI is disabled).
- * Usage: node scripts/create-admin.mjs "Full Name" email@example.com "Password123!"
+ * Create or update an admin account in MongoDB (signup UI is disabled).
+ * Credentials live only in the DB — never in .env.
+ *
+ * Usage:
+ *   node --env-file=.env.local scripts/create-admin.mjs "Full Name" email@example.com "Password123!"
  */
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
@@ -38,7 +41,8 @@ if (!uri) {
 
 await mongoose.connect(uri, { dbName: process.env.MONGODB_DB || "mars" });
 
-const Admin = mongoose.models.Admin ||
+const Admin =
+  mongoose.models.Admin ||
   mongoose.model(
     "Admin",
     new mongoose.Schema(
@@ -53,22 +57,29 @@ const Admin = mongoose.models.Admin ||
   );
 
 const normalized = email.trim().toLowerCase();
+const passwordHash = await bcrypt.hash(password, 12);
 const existing = await Admin.findOne({ email: normalized });
+
 if (existing) {
-  console.error("Admin already exists:", normalized);
-  process.exit(1);
+  existing.name = name.trim();
+  existing.passwordHash = passwordHash;
+  await existing.save();
+  console.log("Updated admin:", {
+    id: existing._id.toString(),
+    name: existing.name,
+    email: existing.email,
+  });
+} else {
+  const admin = await Admin.create({
+    name: name.trim(),
+    email: normalized,
+    passwordHash,
+  });
+  console.log("Created admin:", {
+    id: admin._id.toString(),
+    name: admin.name,
+    email: admin.email,
+  });
 }
 
-const passwordHash = await bcrypt.hash(password, 12);
-const admin = await Admin.create({
-  name: name.trim(),
-  email: normalized,
-  passwordHash,
-});
-
-console.log("Created admin:", {
-  id: admin._id.toString(),
-  name: admin.name,
-  email: admin.email,
-});
 await mongoose.disconnect();
