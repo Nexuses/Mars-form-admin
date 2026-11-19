@@ -206,9 +206,10 @@ export function ApplicationForm() {
       return;
     }
 
-    // Honeypot: bots that fill hidden fields never reach the API.
-    // Do not fake a success screen — that hid real autofill false-positives.
-    if (values.company_website.trim()) {
+    // Honeypot: only treat clear website-like values as bots.
+    // Ignore autofill junk (names, phones, emails) so mobile users are not blocked.
+    const honey = values.company_website.trim();
+    if (honey && /https?:\/\/|www\.|\.[a-z]{2,}\b/i.test(honey)) {
       return;
     }
 
@@ -341,23 +342,24 @@ export function ApplicationForm() {
           ) : (
             <form id="app" noValidate autoComplete="on" onSubmit={onSubmit}>
               <div className="hp" aria-hidden="true">
-                <label>
-                  Leave this field empty{" "}
-                  <input
-                    type="text"
-                    name="company_website"
-                    tabIndex={-1}
-                    autoComplete="new-password"
-                    autoCorrect="off"
-                    autoCapitalize="off"
-                    spellCheck={false}
-                    value={values.company_website}
-                    onChange={(e) =>
-                      onChange("company_website", e.target.value)
-                    }
-                    onFocus={(e) => e.currentTarget.blur()}
-                  />
+                <label htmlFor="company_website">
+                  Leave this field empty
                 </label>
+                <input
+                  type="text"
+                  id="company_website"
+                  name="company_website"
+                  tabIndex={-1}
+                  aria-hidden="true"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck={false}
+                  value={values.company_website}
+                  onChange={(e) =>
+                    onChange("company_website", e.target.value)
+                  }
+                />
               </div>
 
               {step === 0 ? (
@@ -431,7 +433,7 @@ export function ApplicationForm() {
                 </button>
                 <button
                   type="submit"
-                  className="btn btn-primary"
+                  className={`btn btn-primary${submitting ? " is-busy" : ""}`}
                   id="btn-next"
                   style={{ marginLeft: "auto" }}
                   disabled={primaryDisabled}

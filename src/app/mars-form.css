@@ -139,11 +139,18 @@ body {
 .req { color: var(--crimson); font-weight: 600; }
 .hint { margin: -2px 0 8px; font-size: 14px; color: var(--muted); }
 
-input[type="text"], input[type="email"], input[type="tel"], input[type="date"],
+input[type="text"], input[type="email"], input[type="tel"],
 input[type="number"], input[type="password"], select, textarea {
   width: 100%; min-height: 48px; padding: 11px 14px; font: inherit; font-size: 16px;
   color: var(--ink); background: #fff; border: 1.5px solid var(--field-line);
   border-radius: 8px; appearance: none; -webkit-appearance: none;
+}
+/* Keep native date UI on iOS/Safari — appearance:none blanks the control there */
+input[type="date"] {
+  width: 100%; min-height: 48px; padding: 11px 14px; font: inherit; font-size: 16px;
+  color: var(--ink); background: #fff; border: 1.5px solid var(--field-line);
+  border-radius: 8px; color-scheme: light;
+  appearance: auto; -webkit-appearance: auto;
 }
 textarea { min-height: 104px; resize: vertical; }
 select {
@@ -282,6 +289,8 @@ input::placeholder, textarea::placeholder { color: #8A89A6; }
 .btn-primary[disabled] .spinner {
   opacity: 1;
 }
+/* :has() for modern browsers; .is-busy class for older Safari / fallback */
+.btn-primary.is-busy,
 .btn-primary[disabled]:has(.spinner) {
   opacity: 0.85;
   cursor: progress;
@@ -295,7 +304,11 @@ input::placeholder, textarea::placeholder { color: #8A89A6; }
 .step-alert { margin: 0 0 24px; }
 .fineprint { margin: 18px 0 0; font-size: 13.5px; color: var(--muted); }
 .fineprint a { color: var(--navy); font-weight: 600; }
-.hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.hp {
+  position: absolute; left: -10000px; top: auto; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  pointer-events: none;
+}
 .checklist-link { margin-top: 14px; }
 
 /* Success */
